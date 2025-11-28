@@ -8,9 +8,9 @@
 .app-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 1.5rem;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   background: #ffffff;
   border-radius: 1rem;
   box-shadow: 0 10px 25px rgba(117, 11, 76, 0.08);
