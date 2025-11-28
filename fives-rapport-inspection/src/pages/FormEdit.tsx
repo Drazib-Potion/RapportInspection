@@ -22,6 +22,11 @@ const FormEdit: React.FC<FormEditProps> = ({
   <>
     {step === 'productSelection' && (
       <section>
+        <div className="actions-row" style={{ marginBottom: '1.5rem', justifyContent: 'flex-start' }}>
+          <button className="secondary-btn" onClick={onReturnToDrafts}>
+            Retour au menu
+          </button>
+        </div>
         <div className="product-grid">
           {products.map((product) => (
             <article key={product.id} className="product-card">
@@ -33,7 +38,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                     <p className="product-reference">{product.reference}</p>
                   )}
                 </div>
-                <span className="product-id">{product.id}</span>
+                {/* <span className="product-id">{product.id}</span> */}
               </div>
               <div className="field-group">
                 <p>
@@ -61,6 +66,19 @@ const FormEdit: React.FC<FormEditProps> = ({
           <span className="product-id">{selectedProduct.id}</span>
         </div>
         <p className="muted">{selectedProduct.description}</p>
+        {selectedProduct.imagePath && (
+          <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
+            <img
+              src={selectedProduct.imagePath}
+              alt={selectedProduct.name}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '300px',
+                objectFit: 'contain'
+              }}
+            />
+          </div>
+        )}
         <div className="field-group">
           {selectedProduct.questions.map((question) => (
             <label key={question.id}>

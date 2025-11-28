@@ -15,6 +15,7 @@ export type ProductDefinition = {
   reference?: string;
   description: string;
   questions: ProductQuestion[];
+  imagePath?: string;
 };
 
 export type CompletedEntry = {

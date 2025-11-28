@@ -404,16 +404,6 @@ function App() {
 
   return (
     <div className="app-shell">
-      <header className="app-header">
-        <div>
-          <p className="eyebrow">Rapport de conformité</p>
-          <h1>Création d’un rapport d’inspection</h1>
-          <p className="subtitle">
-            Donnez un nom d’affaire, sélectionnez le produit et répondez aux questions spécifiques demandées.
-          </p>
-        </div>
-      </header>
-
       {view === 'draftSelection' ? (
         <DraftSelection
           affaireName={affaireName}

@@ -44,7 +44,7 @@ const DraftSelection: React.FC<DraftSelectionProps> = ({
           )}
         </div>
         <div className="drafts-actions">
-          <button className="secondary-btn" onClick={onChooseDraftsFolder}>
+          <button className="ghost-btn" onClick={onChooseDraftsFolder}>
             Choisir un dossier
           </button>
           {draftsDirectory && (
@@ -105,7 +105,7 @@ const DraftSelection: React.FC<DraftSelectionProps> = ({
     </section>
     <br />
     <br />
-    <section className="affaire-card">
+    {draftsDirectory && <section className="affaire-card">
       <div>
         <h2>1. Identifiez l'affaire</h2>
         <p className="muted">Ce nom accompagnera tous les produits inspectés.</p>
@@ -136,12 +136,12 @@ const DraftSelection: React.FC<DraftSelectionProps> = ({
           </p>
         )}
         {completedEntries.length > 0 && (
-          <button className="secondary-btn" onClick={onRestart}>
+          <button className="ghost-btn" onClick={onRestart}>
             Nouvelle affaire
           </button>
         )}
         {completedEntries.length > 0 && (
-          <button className="secondary-btn" onClick={onSaveDraft}>
+          <button className="ghost-btn" onClick={onSaveDraft}>
             Enregistrer le brouillon
           </button>
         )}
@@ -160,10 +160,10 @@ const DraftSelection: React.FC<DraftSelectionProps> = ({
                       <p className="product-reference">{entry.product.reference}</p>
                     )}
                   </div>
-                  <span className="product-id">{entry.product.id}</span>
+                  {/* <span className="product-id">{entry.product.id}</span> */}
                 </div>
                 <p className="muted">{summaryForEntry(entry)}</p>
-                <button className="secondary-btn" onClick={() => onEditEntry(index)}>
+                <button className="ghost-btn" onClick={() => onEditEntry(index)}>
                   Modifier ce produit
                 </button>
               </article>
@@ -171,7 +171,7 @@ const DraftSelection: React.FC<DraftSelectionProps> = ({
           </div>
         </section>
       )}
-    </section>
+    </section>}
   </>
   );
 };
