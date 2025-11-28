@@ -8,29 +8,7 @@ export const generateProductId = (name: string) =>
     .replace(/[^a-z0-9]+/gi, '-')
     .replace(/^-+|-+$/g, '');
 
-const defaultQuestions: ProductQuestion[] = [
-  {
-    id: 'dimensions',
-    label: 'Dimensions (mm)',
-    helper: 'Longueur x Largeur x Profondeur',
-    type: 'text'
-  },
-  {
-    id: 'observation',
-    label: 'Observation',
-    helper: 'Notes, anomalies ou remarques',
-    type: 'textarea'
-  },
-  {
-    id: 'statut',
-    label: 'Statut de conformité',
-    helper: 'Conforme ou Non conforme',
-    type: 'text'
-  }
-];
-
-// Génère les questions pour le stabilisateur avec tous les champs ST
-const generateStabilisateurQuestions = (): ProductQuestion[] => {
+const generateStabilisateurTableQuestions = (): ProductQuestion[] => {
   const questions: ProductQuestion[] = [];
   const stFields = [
     'ST01', 'ST02', 'ST03', 'ST04', 'ST05', 'ST06',
@@ -46,7 +24,8 @@ const generateStabilisateurQuestions = (): ProductQuestion[] => {
       id: `${stField}_valeur`,
       label: `${stField} - Valeur`,
       helper: isST03 ? 'Entier attendu' : 'Chiffre à virgule attendu',
-      type: 'text'
+      type: 'text',
+      unit: isST03 ? 'nbre' : 'mm'
     });
 
     // Nombre de mesure (int)
@@ -117,159 +96,210 @@ const generateStabilisateurQuestions = (): ProductQuestion[] => {
   return questions;
 };
 
+const generateEmboutCharbonTableQuestions = (): ProductQuestion[] => {
+  const questions: ProductQuestion[] = [];
+  const ecFields = [
+    'EC01', 'EC02', 'EC03', 'EC04', 'EC05', 'EC06',
+    'EC07', 'EC08', 'EC09', 'EC10'
+  ];
+
+  ecFields.forEach((ecField) => {
+    // Valeur (float)
+    // EC09 et EC10 ont une unité spéciale (*)
+    const isEC09orEC10 = ecField === 'EC09' || ecField === 'EC10';
+    questions.push({
+      id: `${ecField}_valeur`,
+      label: `${ecField} - Valeur`,
+      helper: 'Chiffre à virgule attendu',
+      type: 'text',
+      unit: isEC09orEC10 ? '*' : 'mm'
+    });
+
+    // Nombre de mesure (int)
+    questions.push({
+      id: `${ecField}_nombre_mesure`,
+      label: `${ecField} - Nombre de mesure`,
+      helper: 'Entier attendu',
+      type: 'text'
+    });
+
+    // Tolérance + (float)
+    questions.push({
+      id: `${ecField}_tolerance_plus`,
+      label: `${ecField} - Tolérance +`,
+      helper: 'Chiffre à virgule attendu',
+      type: 'text'
+    });
+
+    // Tolérance - (float)
+    questions.push({
+      id: `${ecField}_tolerance_moins`,
+      label: `${ecField} - Tolérance -`,
+      helper: 'Chiffre à virgule attendu',
+      type: 'text'
+    });
+
+    // Cote nominal (float)
+    questions.push({
+      id: `${ecField}_cote_nominal`,
+      label: `${ecField} - Cote nominal`,
+      helper: 'Chiffre à virgule attendu',
+      type: 'text'
+    });
+
+    // Déviation (int)
+    questions.push({
+      id: `${ecField}_deviation`,
+      label: `${ecField} - Déviation`,
+      helper: 'Entier attendu',
+      type: 'text'
+    });
+
+    // Type (text libre)
+    questions.push({
+      id: `${ecField}_type`,
+      label: `${ecField} - Type`,
+      helper: 'Texte libre',
+      type: 'text'
+    });
+
+    // Ref (text libre)
+    questions.push({
+      id: `${ecField}_ref`,
+      label: `${ecField} - Ref`,
+      helper: 'Texte libre',
+      type: 'text'
+    });
+
+    // Date de validité de l'étalonnage (text libre)
+    questions.push({
+      id: `${ecField}_date_etalonnage`,
+      label: `${ecField} - Date de validité de l'étalonnage`,
+      helper: 'Texte libre',
+      type: 'text'
+    });
+  });
+
+  return questions;
+};
+
 export const PRODUCT_CATALOG: ProductDefinition[] = [
-  {
-    id: generateProductId('JEU EMBOUT COMPLET'),
-    name: 'JEU EMBOUT COMPLET',
-    description: 'Inspection du jeu d\'embout complet',
-    questions: defaultQuestions,
-    imagePath: '/productImg/jeu-embout-complet.svg'
-  },
   {
     id: generateProductId('STABILISATEUR'),
     name: 'STABILISATEUR',
     description: 'Inspection du stabilisateur',
-    questions: generateStabilisateurQuestions(),
+    tableQuestions: generateStabilisateurTableQuestions(),
+    normalQuestions: [
+      {
+        id: 'etat_visuel',
+        label: 'ETAT VISUEL',
+        type: 'choice',
+        options: [
+          {
+            value: 'bon',
+            label: 'BON',
+            labelEn: 'GOOD'
+          },
+          {
+            value: 'moyen',
+            label: 'MOYEN',
+            labelEn: 'AVERAGE'
+          },
+          {
+            value: 'mauvais',
+            label: 'MAUVAIS',
+            labelEn: 'BAD'
+          }
+        ]
+      },
+      {
+        id: 'avancement_fabrication',
+        label: 'AVANCEMENT DE LA FABRICATION',
+        type: 'choice',
+        options: [
+          {
+            value: 'conforme_plans',
+            label: 'CONFORME AUX PLANS',
+            labelEn: 'IN ACCORDANCE WITH PLANS'
+          },
+          {
+            value: 'en_retard',
+            label: 'EN RETARD',
+            labelEn: 'LATE'
+          },
+          {
+            value: 'critique',
+            label: 'CRITIQUE',
+            labelEn: 'CRITICAL'
+          }
+        ]
+      },
+      {
+        id: 'commentaire',
+        label: 'Commentaire',
+        helper: 'Notes, anomalies ou remarques',
+        type: 'textarea'
+      }
+    ],
     imagePath: '/productImg/stabilisateur.svg'
   },
   {
-    id: generateProductId('ENSEMBLE STABILISATEUR'),
-    name: 'ENSEMBLE STABILISATEUR',
-    description: 'Inspection de l\'ensemble stabilisateur',
-    questions: defaultQuestions,
-    imagePath: '/productImg/ensemble-stabilisateur.svg'
-  },
-  {
-    id: generateProductId('EMBOUT CHARBON'),
-    name: 'EMBOUT CHARBON',
+    id: generateProductId('Embout Charbon'),
+    name: 'Embout Charbon',
     description: 'Inspection de l\'embout charbon',
-    questions: defaultQuestions,
+    tableQuestions: generateEmboutCharbonTableQuestions(),
+    normalQuestions: [
+      {
+        id: 'etat_visuel',
+        label: 'ETAT VISUEL',
+        type: 'choice',
+        options: [
+          {
+            value: 'bon',
+            label: 'BON',
+            labelEn: 'GOOD'
+          },
+          {
+            value: 'moyen',
+            label: 'MOYEN',
+            labelEn: 'AVERAGE'
+          },
+          {
+            value: 'mauvais',
+            label: 'MAUVAIS',
+            labelEn: 'BAD'
+          }
+        ]
+      },
+      {
+        id: 'avancement_fabrication',
+        label: 'AVANCEMENT DE LA FABRICATION',
+        type: 'choice',
+        options: [
+          {
+            value: 'conforme_plans',
+            label: 'CONFORME AUX PLANS',
+            labelEn: 'IN ACCORDANCE WITH PLANS'
+          },
+          {
+            value: 'en_retard',
+            label: 'EN RETARD',
+            labelEn: 'LATE'
+          },
+          {
+            value: 'critique',
+            label: 'CRITIQUE',
+            labelEn: 'CRITICAL'
+          }
+        ]
+      },
+      {
+        id: 'commentaire',
+        label: 'Commentaire',
+        helper: 'Notes, anomalies ou remarques',
+        type: 'textarea'
+      }
+    ],
     imagePath: '/productImg/embout-charbon.svg'
   },
-  {
-    id: generateProductId('ROSACE GAZ'),
-    name: 'ROSACE GAZ',
-    description: 'Inspection de la rosace gaz',
-    questions: defaultQuestions,
-    imagePath: '/productImg/rosace-gaz.svg'
-  },
-  {
-    id: generateProductId('SUPPORT ROSACE GAZ'),
-    name: 'SUPPORT ROSACE GAZ',
-    description: 'Inspection du support rosace gaz',
-    questions: defaultQuestions,
-    imagePath: '/productImg/support-rosace-gaz.svg'
-  },
-  {
-    id: generateProductId('VIROLE DE COMMANDE GAZ'),
-    name: 'VIROLE DE COMMANDE GAZ',
-    description: 'Inspection de la virole de commande gaz',
-    questions: defaultQuestions,
-    imagePath: '/productImg/virole-de-commande-gaz.svg'
-  },
-  {
-    id: generateProductId('ROSACE AIR FIXE'),
-    name: 'ROSACE AIR FIXE',
-    description: 'Inspection de la rosace air fixe',
-    questions: defaultQuestions,
-    imagePath: '/productImg/rosace-air-fixe.svg'
-  },
-  {
-    id: generateProductId('ROSACE AIR MOBILE'),
-    name: 'ROSACE AIR MOBILE',
-    description: 'Inspection de la rosace air mobile',
-    questions: defaultQuestions,
-    imagePath: '/productImg/rosace-air-mobile.svg'
-  },
-  {
-    id: generateProductId('ENSEMBLE 2 ROSACES'),
-    name: 'ENSEMBLE 2 ROSACES',
-    description: 'Inspection de l\'ensemble 2 rosaces',
-    questions: defaultQuestions,
-    imagePath: '/productImg/ensemble-2-rosaces.svg'
-  },
-  {
-    id: generateProductId('PION DE COMMANDE'),
-    name: 'PION DE COMMANDE',
-    description: 'Inspection du pion de commande',
-    questions: defaultQuestions,
-    imagePath: '/productImg/pion-de-commande.svg'
-  },
-  {
-    id: generateProductId('SUPPORT ROSACE AIR'),
-    name: 'SUPPORT ROSACE AIR',
-    description: 'Inspection du support rosace air',
-    questions: defaultQuestions,
-    imagePath: '/productImg/support-rosace-air.svg'
-  },
-  {
-    id: generateProductId('ENSEMBLE ROSACE AIR'),
-    name: 'ENSEMBLE ROSACE AIR',
-    description: 'Inspection de l\'ensemble rosace air',
-    questions: defaultQuestions,
-    imagePath: '/productImg/ensemble-rosace-air.svg'
-  },
-  {
-    id: generateProductId('VIROLE DE COMMANDE AIR'),
-    name: 'VIROLE DE COMMANDE AIR',
-    description: 'Inspection de la virole de commande air',
-    questions: defaultQuestions,
-    imagePath: '/productImg/virole-de-commande-air.svg'
-  },
-  {
-    id: generateProductId('EMBOUT BI-CHANNEL'),
-    name: 'EMBOUT BI-CHANNEL',
-    description: 'Inspection de l\'embout bi-channel',
-    questions: defaultQuestions,
-    imagePath: '/productImg/embout-bi-channel.svg'
-  },
-  {
-    id: generateProductId('VIROLE BI-CHANNEL'),
-    name: 'VIROLE BI-CHANNEL',
-    description: 'Inspection de la virole bi-channel',
-    questions: defaultQuestions,
-    imagePath: '/productImg/virole-bi-channel.svg'
-  },
-  {
-    id: generateProductId('SEGMENT'),
-    name: 'SEGMENT',
-    description: 'Inspection du segment',
-    questions: defaultQuestions,
-    imagePath: '/productImg/segment.svg'
-  },
-  {
-    id: generateProductId('EMBOUT AIR PERCE'),
-    name: 'EMBOUT AIR PERCE',
-    description: 'Inspection de l\'embout air percé',
-    questions: defaultQuestions,
-    imagePath: '/productImg/embout-air-perce.svg'
-  },
-  {
-    id: generateProductId('INSERT'),
-    name: 'INSERT',
-    description: 'Inspection de l\'insert',
-    questions: defaultQuestions,
-    imagePath: '/productImg/insert.svg'
-  },
-  {
-    id: generateProductId('BOUCLIER EMBOUT AIR'),
-    name: 'BOUCLIER EMBOUT AIR',
-    description: 'Inspection du bouclier embout air',
-    questions: defaultQuestions,
-    imagePath: '/productImg/bouclier-embout-air.svg'
-  },
-  {
-    id: generateProductId('PION EMBOUT AIR'),
-    name: 'PION EMBOUT AIR',
-    description: 'Inspection du pion embout air',
-    questions: defaultQuestions,
-    imagePath: '/productImg/pion-embout-air.svg'
-  },
-  {
-    id: generateProductId('VIROLE AIR'),
-    name: 'VIROLE AIR',
-    description: 'Inspection de la virole air',
-    questions: defaultQuestions,
-    imagePath: '/productImg/virole-air.svg'
-  }
 ];

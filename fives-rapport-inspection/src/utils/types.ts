@@ -2,11 +2,33 @@ export type Step = 'productSelection' | 'productForm';
 
 export type View = 'draftSelection' | 'form';
 
+export type ChoiceOption = {
+  value: string;
+  label: string;
+  labelEn?: string; // Traduction anglaise optionnelle
+};
+
 export type ProductQuestion = {
   id: string;
   label: string;
   helper?: string;
-  type: 'text' | 'textarea';
+  type: 'text' | 'textarea' | 'checkbox' | 'choice';
+  options?: ChoiceOption[]; // Pour type 'choice', 3 options attendues
+  unit?: string; // Unité pour les questions de tableau (ex: 'mm', 'nbre', '*')
+};
+
+export type TableRow = {
+  identifier: string;
+  unit: string; // Unité pour cet identifiant
+  valeur: { id: string; helper?: string };
+  nombre_mesure: { id: string; helper?: string };
+  tolerance_plus: { id: string; helper?: string };
+  tolerance_moins: { id: string; helper?: string };
+  cote_nominal: { id: string; helper?: string };
+  deviation: { id: string; helper?: string };
+  type: { id: string; helper?: string };
+  ref: { id: string; helper?: string };
+  date_etalonnage: { id: string; helper?: string };
 };
 
 export type ProductDefinition = {
@@ -14,7 +36,8 @@ export type ProductDefinition = {
   name: string;
   reference?: string;
   description: string;
-  questions: ProductQuestion[];
+  tableQuestions?: ProductQuestion[];
+  normalQuestions?: ProductQuestion[];
   imagePath?: string;
 };
 

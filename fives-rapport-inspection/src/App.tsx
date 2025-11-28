@@ -15,11 +15,16 @@ import type {
   DraftNamePrompt
 } from './utils/types';
 
-const createQuestionDefaults = (questions: ProductQuestion[]) =>
-  questions.reduce<Record<string, string>>((acc, question) => {
+const createQuestionDefaults = (product: ProductDefinition) => {
+  const allQuestions = [
+    ...(product.tableQuestions ?? []),
+    ...(product.normalQuestions ?? [])
+  ];
+  return allQuestions.reduce<Record<string, string>>((acc, question) => {
     acc[question.id] = '';
     return acc;
   }, {});
+};
 
 declare global {
   interface Window {
@@ -101,7 +106,7 @@ function App() {
 
   const handleSelectProduct = (product: ProductDefinition) => {
     setSelectedProductId(product.id);
-    setCurrentAnswers(createQuestionDefaults(product.questions));
+    setCurrentAnswers(createQuestionDefaults(product));
     setActiveEntryIndex(null);
     setStep('productForm');
     setStatusMessage(`Questionnaire dédié à ${product.name}.`);
@@ -389,7 +394,11 @@ function App() {
   };
 
   const summaryForEntry = (entry: CompletedEntry) => {
-    const responses = entry.product.questions
+    const allQuestions = [
+      ...(entry.product.tableQuestions ?? []),
+      ...(entry.product.normalQuestions ?? [])
+    ];
+    const responses = allQuestions
       .map((question) => {
         const answer = entry.answers[question.id]?.trim();
         if (!answer) {
