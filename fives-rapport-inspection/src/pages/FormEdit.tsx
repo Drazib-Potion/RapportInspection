@@ -1,5 +1,6 @@
 import React from 'react';
-import type { FormEditProps, ProductQuestion, TableRow } from '../utils/types';
+import { useAppContext } from '../contexts/AppContext';
+import type { ProductQuestion, TableRow } from '../utils/types';
 
 // Champs attendus pour le format tableau
 const TABLE_FIELDS = [
@@ -68,14 +69,16 @@ const parseTableQuestions = (questions: ProductQuestion[]): TableRow[] => {
   return rows as TableRow[];
 };
 
-const FormEdit: React.FC<FormEditProps> = ({
-  selectedProduct,
-  onReturnToDrafts,
-  currentAnswers,
-  onAnswerChange,
-  activeEntryIndex,
-  onDeleteEntry
-}) => {
+const FormEdit: React.FC = () => {
+  const {
+    selectedProduct,
+    currentAnswers,
+    answerChange,
+    activeEntryIndex,
+    handleDeleteEntry,
+    handleReturnToMenu,
+  } = useAppContext();
+
   if (!selectedProduct) {
     return null;
   }
@@ -134,7 +137,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.valeur?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.valeur?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.valeur?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -144,7 +147,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.nombre_mesure?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.nombre_mesure?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.nombre_mesure?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -153,7 +156,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.tolerance_plus?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.tolerance_plus?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.tolerance_plus?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -162,7 +165,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.tolerance_moins?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.tolerance_moins?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.tolerance_moins?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -171,7 +174,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.cote_nominal?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.cote_nominal?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.cote_nominal?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -180,7 +183,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.deviation?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.deviation?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.deviation?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -189,7 +192,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.type?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.type?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.type?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -198,7 +201,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.ref?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.ref?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.ref?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -207,7 +210,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                           type="text"
                           value={currentAnswers[row.date_etalonnage?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => onAnswerChange(row.date_etalonnage?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.date_etalonnage?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>
@@ -236,7 +239,7 @@ const FormEdit: React.FC<FormEditProps> = ({
                             name={question.id}
                             value={option.value}
                             checked={currentAnswers[question.id] === option.value}
-                            onChange={(event) => onAnswerChange(question.id, event.target.value)}
+                            onChange={(event) => answerChange(question.id, event.target.value)}
                             className="choice-radio"
                           />
                           <div className="choice-option-content">
@@ -261,20 +264,20 @@ const FormEdit: React.FC<FormEditProps> = ({
                       rows={3}
                       value={currentAnswers[question.id] ?? ''}
                       placeholder="Saisissez votre réponse"
-                      onChange={(event) => onAnswerChange(question.id, event.target.value)}
+                      onChange={(event) => answerChange(question.id, event.target.value)}
                     />
                   ) : question.type === 'checkbox' ? (
                     <input
                       type="checkbox"
                       checked={currentAnswers[question.id] === 'true' || currentAnswers[question.id] === 'on'}
-                      onChange={(event) => onAnswerChange(question.id, event.target.checked ? 'true' : 'false')}
+                      onChange={(event) => answerChange(question.id, event.target.checked ? 'true' : 'false')}
                     />
                   ) : (
                     <input
                       type="text"
                       value={currentAnswers[question.id] ?? ''}
                       placeholder="Saisissez votre réponse"
-                      onChange={(event) => onAnswerChange(question.id, event.target.value)}
+                      onChange={(event) => answerChange(question.id, event.target.value)}
                     />
                   )}
                   {question.helper && <span className="muted">{question.helper}</span>}
@@ -288,7 +291,7 @@ const FormEdit: React.FC<FormEditProps> = ({
           {activeEntryIndex !== null && (
             <button
               className="ghost-btn"
-              onClick={() => onDeleteEntry(activeEntryIndex)}
+              onClick={() => handleDeleteEntry(activeEntryIndex)}
               style={{ marginRight: 'auto' }}
             >
               Supprimer ce produit
@@ -296,7 +299,7 @@ const FormEdit: React.FC<FormEditProps> = ({
           )}
           <button
             className="primary-btn"
-            onClick={onReturnToDrafts}
+            onClick={handleReturnToMenu}
           >
             Retour au menu
           </button>

@@ -1,34 +1,29 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { ProductDefinition } from '../utils/types';
+import { useAppContext } from '../contexts/AppContext';
+import { PRODUCT_CATALOG } from '../utils/productData';
 
-type ProductSelectionProps = {
-  products: ProductDefinition[];
-  onSelectProduct: (product: ProductDefinition) => void;
-  onReturnToDrafts: () => void;
-};
-
-const ProductSelection: React.FC<ProductSelectionProps> = ({
-  products,
-  onSelectProduct,
-  onReturnToDrafts
-}) => {
+const ProductSelection: React.FC = () => {
   const navigate = useNavigate();
+  const { selectProduct, handleReturnToMenu } = useAppContext();
 
-  const handleSelectProduct = (product: ProductDefinition) => {
-    onSelectProduct(product);
-    navigate(`/form/${product.id}`);
+  const handleSelectProduct = (productId: string) => {
+    const product = PRODUCT_CATALOG.find(p => p.id === productId);
+    if (product) {
+      selectProduct(product);
+      navigate(`/form/${product.id}`);
+    }
   };
 
   return (
     <section>
       <div className="actions-row" style={{ marginBottom: '1.5rem', justifyContent: 'flex-start' }}>
-        <button className="secondary-btn" onClick={onReturnToDrafts}>
+        <button className="secondary-btn" onClick={handleReturnToMenu}>
           Retour au menu
         </button>
       </div>
       <div className="product-grid">
-        {products.map((product) => (
+        {PRODUCT_CATALOG.map((product) => (
           <article key={product.id} className="product-card">
             <div className="product-header">
               <div>
@@ -47,7 +42,7 @@ const ProductSelection: React.FC<ProductSelectionProps> = ({
                 }</strong>
               </p>
             </div>
-            <button className="primary-btn" onClick={() => handleSelectProduct(product)}>
+            <button className="primary-btn" onClick={() => handleSelectProduct(product.id)}>
               Choisir ce produit
             </button>
           </article>
@@ -58,4 +53,3 @@ const ProductSelection: React.FC<ProductSelectionProps> = ({
 };
 
 export default ProductSelection;
-
