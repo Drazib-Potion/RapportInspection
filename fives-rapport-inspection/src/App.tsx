@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import './App.css';
-import DraftSelection from './pages/DraftSelection';
+import MainMenu from './pages/MainMenu';
+import ProductSelection from './pages/ProductSelection';
 import FormEdit from './pages/FormEdit';
 import { generateProductId, PRODUCT_CATALOG } from './utils/productData';
 import type {
-  Step,
-  View,
-  ProductQuestion,
   ProductDefinition,
   CompletedEntry,
   DraftSummary,
@@ -32,9 +31,8 @@ declare global {
   }
 }
 
-function App() {
-  const [view, setView] = useState<View>('draftSelection');
-  const [step, setStep] = useState<Step>('productSelection');
+function AppContent() {
+  const navigate = useNavigate();
   const [affaireName, setAffaireName] = useState('');
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>>({});
@@ -95,20 +93,19 @@ function App() {
 
   const handleStartInspection = () => {
     if (!trimmedAffaire) {
-      setStatusMessage('Saisissez d’abord le nom de l’affaire pour démarrer le rapport.');
+      setStatusMessage("Saisissez d'abord le nom de l'affaire pour démarrer le rapport.");
       return;
     }
     resetFormState();
-    setStep('productSelection');
-    setView('form');
-    setStatusMessage('Choisissez un produit pour l’inspection.');
+    navigate('/form');
+    setStatusMessage("Choisissez un produit pour l'inspection.");
   };
 
   const handleSelectProduct = (product: ProductDefinition) => {
     setSelectedProductId(product.id);
     setCurrentAnswers(createQuestionDefaults(product));
     setActiveEntryIndex(null);
-    setStep('productForm');
+    navigate(`/form/${product.id}`);
     setStatusMessage(`Questionnaire dédié à ${product.name}.`);
   };
 
@@ -166,7 +163,7 @@ function App() {
     setSelectedProductId(entry.product.id);
     setCurrentAnswers({ ...entry.answers });
     setActiveEntryIndex(index);
-    setStep('productForm');
+    navigate(`/form/${entry.product.id}`);
     setStatusMessage(`Modification de ${entry.product.name}.`);
   };
 
@@ -174,13 +171,11 @@ function App() {
     setCompletedEntries((prev) => prev.filter((_, idx) => idx !== index));
     resetFormState();
     setStatusMessage('Produit supprimé du brouillon.');
-    setStep('productSelection');
-    setView('draftSelection');
+    navigate('/');
   };
 
   const handleEditEntryFromDrafts = (index: number) => {
     handleEditEntry(index);
-    setView('form');
   };
 
   const handleLoadDraft = async (draftId: string) => {
@@ -199,8 +194,7 @@ function App() {
       setAffaireName(loadedAffaireName);
       setCompletedEntries(Array.isArray(data.entries) ? data.entries : []);
       resetFormState();
-      setStep('productSelection');
-      setView('draftSelection');
+      navigate('/');
       setStatusMessage(`Brouillon « ${draftName} » chargé.`);
     } catch (error) {
       console.error('Erreur lors du chargement du brouillon', error);
@@ -271,17 +265,17 @@ function App() {
     setCompletedEntries(nextEntries);
     resetFormState();
 
-    setStep('productSelection');
     if (returnToSelection) {
+      navigate('/form');
       setStatusMessage(
         `${currentProduct.name} ${wasEditing ? 'mis à jour' : 'ajouté'} à ${
-          trimmedAffaire || "l’affaire en cours"
+          trimmedAffaire || "l'affaire en cours"
         }.`
       );
       return;
     }
 
-    setView('draftSelection');
+    navigate('/');
     setStatusMessage(
       wasEditing
         ? `${currentProduct.name} mis à jour. Cliquez sur « Enregistrer le brouillon » pour conserver vos changements.`
@@ -338,8 +332,7 @@ function App() {
       }
 
       await persistDraft(entriesToPersist, trimmedDraftName, false);
-      setStep('productSelection');
-      setView('draftSelection');
+      navigate('/');
       setStatusMessage('Brouillon enregistré avec succès.');
       setDraftNamePrompt(null);
     } catch (error) {
@@ -353,8 +346,7 @@ function App() {
     }
     try {
       await persistDraft(overwritePrompt.entries, overwritePrompt.draftName, true);
-      setStep('productSelection');
-      setView('draftSelection');
+      navigate('/');
       setStatusMessage(`Brouillon « ${overwritePrompt.draftName} » remplacé avec succès.`);
     } catch (error) {
       console.error('Erreur lors du remplacement du brouillon', error);
@@ -380,8 +372,7 @@ function App() {
     }
     
     resetFormState();
-    setStep('productSelection');
-    setView('draftSelection');
+    navigate('/');
   };
 
   const handleRestart = () => {
@@ -389,8 +380,7 @@ function App() {
     setAffaireName('');
     resetFormState();
     setStatusMessage('Nouvelle affaire prête à être saisie.');
-    setStep('productSelection');
-    setView('draftSelection');
+    navigate('/');
   };
 
   const summaryForEntry = (entry: CompletedEntry) => {
@@ -411,52 +401,91 @@ function App() {
     return responses.length > 0 ? responses.join(' · ') : 'Aucune réponse fournie.';
   };
 
+  // Wrapper component pour accéder aux params de route
+  const FormEditWrapper = () => {
+    const { productId } = useParams<{ productId: string }>();
+    
+    // Récupérer le produit depuis le catalogue ou le state
+    const productFromUrl = productId ? PRODUCT_CATALOG.find(p => p.id === productId) : null;
+    const productFromState = selectedProduct;
+    
+    // Utiliser le produit de l'URL si disponible, sinon celui du state
+    const currentProduct = productFromUrl || productFromState || null;
+    
+    // Si le produit de l'URL existe mais n'est pas dans le state, l'initialiser
+    React.useEffect(() => {
+      if (productFromUrl && selectedProductId !== productFromUrl.id) {
+        setSelectedProductId(productFromUrl.id);
+        setCurrentAnswers(createQuestionDefaults(productFromUrl));
+        setActiveEntryIndex(null);
+      }
+    }, [productFromUrl]);
+    
+    // Si le produit n'existe pas, rediriger
+    React.useEffect(() => {
+      if (productId && !currentProduct) {
+        navigate('/form');
+      }
+    }, [productId, currentProduct]);
+
+    return (
+      <FormEdit
+        selectedProduct={currentProduct}
+        onReturnToDrafts={handleReturnToMenu}
+        currentAnswers={currentAnswers}
+        onAnswerChange={handleAnswerChange}
+        activeEntryIndex={activeEntryIndex}
+        onDeleteEntry={handleDeleteEntry}
+      />
+    );
+  };
+
   return (
     <div className="app-shell">
-      {view === 'draftSelection' ? (
-        <DraftSelection
-          affaireName={affaireName}
-          onAffaireNameChange={setAffaireName}
-          canStart={Boolean(trimmedAffaire && draftsDirectory)}
-          startButtonLabel={
-            completedEntries.length > 0 ? 'Ajouter un autre produit' : 'Démarrer l’inspection'
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MainMenu
+              affaireName={affaireName}
+              onAffaireNameChange={setAffaireName}
+              canStart={Boolean(trimmedAffaire && draftsDirectory)}
+              startButtonLabel={
+                completedEntries.length > 0 ? 'Ajouter un autre produit' : "Démarrer l'inspection"
+              }
+              onStartInspection={handleStartInspection}
+              onRestart={handleRestart}
+              onSaveDraft={() => handleSaveDraftClick(false)}
+              completedEntries={completedEntries}
+              onEditEntry={handleEditEntryFromDrafts}
+              summaryForEntry={summaryForEntry}
+              draftsDirectory={draftsDirectory}
+              drafts={drafts}
+              draftsLoading={draftsLoading}
+              draftsError={draftsError}
+              electronAvailable={electronAvailable}
+              onChooseDraftsFolder={handleChooseDraftsFolder}
+              onClearDraftsDirectory={handleClearDraftsDirectory}
+              onLoadDraft={handleLoadDraft}
+              onDeleteDraft={handleDeleteDraft}
+            />
           }
-          onStartInspection={handleStartInspection}
-          onRestart={handleRestart}
-          onSaveDraft={() => handleSaveDraftClick(false)}
-          completedEntries={completedEntries}
-          onEditEntry={handleEditEntryFromDrafts}
-          summaryForEntry={summaryForEntry}
-          draftsDirectory={draftsDirectory}
-          drafts={drafts}
-          draftsLoading={draftsLoading}
-          draftsError={draftsError}
-          electronAvailable={electronAvailable}
-          onChooseDraftsFolder={handleChooseDraftsFolder}
-          onClearDraftsDirectory={handleClearDraftsDirectory}
-          onLoadDraft={handleLoadDraft}
-          onDeleteDraft={handleDeleteDraft}
         />
-      ) : (
-        <FormEdit
-          step={step}
-          products={PRODUCT_CATALOG}
-          selectedProduct={selectedProduct ?? null}
-          onSelectProduct={handleSelectProduct}
-          currentAnswers={currentAnswers}
-          onAnswerChange={handleAnswerChange}
-          saveProductAnswers={saveProductAnswers}
-          onSaveDraft={handleSaveDraftClick}
-          activeEntryIndex={activeEntryIndex}
-          completedEntries={completedEntries}
-          onEditEntry={handleEditEntry}
-          onDeleteEntry={handleDeleteEntry}
-          canPersistDrafts={canPersistDrafts}
-          hasPendingEntry={completedEntries.length > 0 || Boolean(selectedProduct)}
-          isSavingDraft={isSavingDraft}
-          onReturnToDrafts={handleReturnToMenu}
+        <Route
+          path="/form"
+          element={
+            <ProductSelection
+              products={PRODUCT_CATALOG}
+              onSelectProduct={handleSelectProduct}
+              onReturnToDrafts={handleReturnToMenu}
+            />
+          }
         />
-      )}
+        <Route
+          path="/form/:productId"
+          element={<FormEditWrapper />}
+        />
+      </Routes>
       {draftNamePrompt && (
         <div className="modal-overlay">
           <div className="modal-card">
@@ -523,6 +552,14 @@ function App() {
         </div>
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

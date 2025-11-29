@@ -69,62 +69,18 @@ const parseTableQuestions = (questions: ProductQuestion[]): TableRow[] => {
 };
 
 const FormEdit: React.FC<FormEditProps> = ({
-  step,
-  products,
   selectedProduct,
-  onSelectProduct,
   onReturnToDrafts,
   currentAnswers,
   onAnswerChange,
-  saveProductAnswers,
-  onSaveDraft,
   activeEntryIndex,
-  completedEntries,
-  onEditEntry,
-  onDeleteEntry,
-  canPersistDrafts,
-  hasPendingEntry,
-  isSavingDraft
-}) => (
-  <>
-    {step === 'productSelection' && (
-      <section>
-        <div className="actions-row" style={{ marginBottom: '1.5rem', justifyContent: 'flex-start' }}>
-          <button className="secondary-btn" onClick={onReturnToDrafts}>
-            Retour au menu
-          </button>
-        </div>
-        <div className="product-grid">
-          {products.map((product) => (
-            <article key={product.id} className="product-card">
-              <div className="product-header">
-                <div>
-                  <h3>{product.name}</h3>
-                  <p className="muted">{product.description}</p>
-                  {product.reference && (
-                    <p className="product-reference">{product.reference}</p>
-                  )}
-                </div>
-                {/* <span className="product-id">{product.id}</span> */}
-              </div>
-              <div className="field-group">
-                <p>
-                  Questions à répondre : <strong>{
-                    (product.tableQuestions?.length ?? 0) + 
-                    (product.normalQuestions?.length ?? 0)
-                  }</strong>
-                </p>
-              </div>
-              <button className="primary-btn" onClick={() => onSelectProduct(product)}>
-                Choisir ce produit
-              </button>
-            </article>
-          ))}
-        </div>
-      </section>
-    )}
+  onDeleteEntry
+}) => {
+  if (!selectedProduct) {
+    return null;
+  }
 
-    {step === 'productForm' && selectedProduct && (
+  return (
       <section className="product-card">
         <div className="product-header">
           <div>
@@ -338,9 +294,6 @@ const FormEdit: React.FC<FormEditProps> = ({
               Supprimer ce produit
             </button>
           )}
-          {/* <button className="secondary-btn" onClick={() => void saveProductAnswers(true)}>
-            {activeEntryIndex !== null ? 'Enregistrer et ajouter' : 'Ajouter un autre produit'}
-          </button> */}
           <button
             className="primary-btn"
             onClick={onReturnToDrafts}
@@ -348,15 +301,8 @@ const FormEdit: React.FC<FormEditProps> = ({
             Retour au menu
           </button>
         </div>
-        {!canPersistDrafts && (
-          <p className="warning-text">
-            Sélectionnez un dossier de brouillons dans le menu principal pour activer « Terminer le
-            rapport ».
-          </p>
-        )}
       </section>
-    )}
-  </>
-);
+  );
+};
 
 export default FormEdit;

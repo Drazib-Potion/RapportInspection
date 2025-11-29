@@ -1,5 +1,5 @@
 import React from 'react';
-import type { DraftSelectionProps, CompletedEntry } from '../utils/types';
+import type { MainMenuProps, CompletedEntry } from '../utils/types';
 
 // Helper pour obtenir le label d'une question de type choice
 const getChoiceLabel = (entry: CompletedEntry, questionId: string): string | null => {
@@ -36,7 +36,7 @@ const getAvancementColor = (entry: CompletedEntry): { border: string; dot: strin
   }
 };
 
-const DraftSelection: React.FC<DraftSelectionProps> = ({
+const MainMenu: React.FC<MainMenuProps> = ({
   affaireName,
   onAffaireNameChange,
   canStart,
@@ -75,7 +75,7 @@ const DraftSelection: React.FC<DraftSelectionProps> = ({
               : '⚠️ Sélectionnez un dossier de brouillons pour commencer. Cette étape est obligatoire.'}
           </p>
           {!electronAvailable && (
-            <p className="warning-text">Fonction disponible uniquement dans l’application desktop.</p>
+            <p className="warning-text">Fonction disponible uniquement dans l'application desktop.</p>
           )}
         </div>
         <div className="drafts-actions">
@@ -301,4 +301,5 @@ const DraftSelection: React.FC<DraftSelectionProps> = ({
   );
 };
 
-export default DraftSelection;
+export default MainMenu;
+

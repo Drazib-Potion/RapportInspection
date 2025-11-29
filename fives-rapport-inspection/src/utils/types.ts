@@ -1,7 +1,5 @@
 export type Step = 'productSelection' | 'productForm';
 
-export type View = 'draftSelection' | 'form';
-
 export type ChoiceOption = {
   value: string;
   label: string;
@@ -83,7 +81,7 @@ export type DraftNamePrompt = {
   defaultName: string;
 };
 
-export type DraftSelectionProps = {
+export type MainMenuProps = {
   affaireName: string;
   onAffaireNameChange: (value: string) => void;
   canStart: boolean;
@@ -106,21 +104,11 @@ export type DraftSelectionProps = {
 };
 
 export type FormEditProps = {
-  step: Step;
-  products: ProductDefinition[];
   selectedProduct: ProductDefinition | null;
-  onSelectProduct: (product: ProductDefinition) => void;
   onReturnToDrafts: () => void;
   currentAnswers: Record<string, string>;
   onAnswerChange: (questionId: string, value: string) => void;
-  saveProductAnswers: (returnToSelection: boolean) => Promise<void> | void;
-  onSaveDraft: () => Promise<void> | void;
   activeEntryIndex: number | null;
-  completedEntries: CompletedEntry[];
-  onEditEntry: (index: number) => void;
   onDeleteEntry: (index: number) => void;
-  canPersistDrafts: boolean;
-  hasPendingEntry: boolean;
-  isSavingDraft: boolean;
 };
 
