@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDrafts } from '../hooks/useDrafts';
 import { useProductForm } from '../hooks/useProductForm';
 import { generateProductId } from '../utils/productData';
@@ -78,6 +79,7 @@ export const useAppContext = () => {
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [affaireName, setAffaireName] = useState('');
   const [draftNamePrompt, setDraftNamePrompt] = useState<{ entries: CompletedEntry[]; defaultName: string } | null>(null);
   const [draftNameInput, setDraftNameInput] = useState('');
@@ -129,10 +131,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       return;
     }
 
-    const defaultName = trimmedAffaire || 'Brouillon sans nom';
+    const defaultName = trimmedAffaire ? `draft-${trimmedAffaire}` : `draft-${t('mainMenu.affaireNameLabel')}`;
     setDraftNameInput(defaultName);
     setDraftNamePrompt({ entries: entriesToPersist, defaultName });
-  }, [productForm, trimmedAffaire]);
+  }, [productForm, trimmedAffaire, t]);
 
   const confirmDraftNameSave = useCallback(async (draftNameParam?: string) => {
     if (!draftNamePrompt) {
@@ -172,9 +174,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       navigate('/');
       setDraftNamePrompt(null);
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde du brouillon', error);
+      console.error(t('errors.saveDraftError'), error);
     }
-  }, [draftNamePrompt, draftNameInput, productForm, drafts, trimmedAffaire, navigate]);
+  }, [draftNamePrompt, draftNameInput, productForm, drafts, trimmedAffaire, navigate, t]);
 
   const confirmOverwriteSave = useCallback(async () => {
     if (!overwritePrompt || !drafts.draftsDirectory) {
@@ -188,11 +190,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       }, true);
       navigate('/');
     } catch (error) {
-      console.error('Erreur lors du remplacement du brouillon', error);
+      console.error(t('errors.overwriteError'), error);
     } finally {
       setOverwritePrompt(null);
     }
-  }, [overwritePrompt, drafts, trimmedAffaire, navigate]);
+  }, [overwritePrompt, drafts, trimmedAffaire, navigate, t]);
 
   const handleLoadDraft = useCallback(async (draftId: string) => {
     try {
@@ -203,24 +205,24 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       productForm.resetFormState();
       navigate('/');
     } catch (error) {
-      console.error('Erreur lors du chargement du brouillon', error);
+      console.error(t('errors.loadDraftError'), error);
     }
-  }, [drafts, productForm, navigate]);
+  }, [drafts, productForm, navigate, t]);
 
   const handleDeleteDraft = useCallback(async (draftId: string) => {
     const draft = drafts.drafts.find((d) => d.id === draftId);
-    const draftName = draft?.affaireName || 'ce brouillon';
+    const draftName = draft?.affaireName || '';
 
-    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer le brouillon « ${draftName} » ?`)) {
+    if (!window.confirm(t('confirmations.deleteDraft', { name: draftName }))) {
       return;
     }
 
     try {
       await drafts.deleteDraft(draftId);
     } catch (error) {
-      console.error('Erreur lors de la suppression du brouillon', error);
+      console.error(t('errors.deleteDraftError'), error);
     }
-  }, [drafts]);
+  }, [drafts, t]);
 
   const summaryForEntry = useCallback((entry: CompletedEntry) => {
     const allQuestions = [
@@ -237,8 +239,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       })
       .filter(Boolean);
 
-    return responses.length > 0 ? responses.join(' · ') : 'Aucune réponse fournie.';
-  }, []);
+    return responses.length > 0 ? responses.join(' · ') : t('confirmations.noResponse');
+  }, [t]);
 
   const contextValue: AppContextType = {
     affaireName,

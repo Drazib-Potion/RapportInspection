@@ -1,0 +1,130 @@
+{
+  "common": {
+    "appTitle": "Rapport d'inspection",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "load": "Charger",
+    "edit": "Modifier",
+    "back": "Retour",
+    "clear": "Effacer",
+    "export": "Exporter",
+    "excel": "Excel"
+  },
+  "mainMenu": {
+    "title": "Brouillons locaux",
+    "folderSelected": "Dossier sélectionné : {{folder}}",
+    "selectFolderWarning": "⚠️ Sélectionnez un dossier de brouillons pour commencer. Cette étape est obligatoire.",
+    "desktopOnly": "Fonction disponible uniquement dans l'application desktop.",
+    "chooseFolder": "Choisir un dossier",
+    "clearFolder": "Effacer",
+    "searchPlaceholder": "Rechercher un brouillon",
+    "loadingDrafts": "Chargement des brouillons…",
+    "noDraftsInFolder": "Aucun brouillon dans ce dossier pour le moment.",
+    "chooseFolderToSeeDrafts": "Choisissez un dossier pour voir vos brouillons.",
+    "productsCount": "{{count}} produit(s)",
+    "identifyAffaire": "1. Identifiez l'affaire",
+    "affaireDescription": "Ce nom accompagnera tous les produits inspectés.",
+    "newAffaire": "Nouvelle affaire",
+    "affaireNameLabel": "Nom de l'affaire",
+    "affaireNamePlaceholder": "Ex. Chantier Îlot A",
+    "affaireNamePlaceholderDisabled": "Sélectionnez d'abord un dossier de brouillons",
+    "selectFolderFirst": "Sélectionnez d'abord un dossier de brouillons",
+    "exportExcel": "Export Excel",
+    "saveDraft": "Enregistrer le brouillon",
+    "startInspection": "Démarrer l'inspection",
+    "addAnotherProduct": "Ajouter un autre produit",
+    "completedProducts": "Produits saisis",
+    "conformePlans": "CONFORME AUX PLANS",
+    "enRetard": "EN RETARD",
+    "critique": "CRITIQUE",
+    "modifyProduct": "Modifier ce produit",
+    "visualState": "État visuel :",
+    "progress": "Avancement :"
+  },
+  "productSelection": {
+    "backToMenu": "Retour au menu",
+    "questionsToAnswer": "Questions à répondre :",
+    "chooseProduct": "Choisir ce produit"
+  },
+  "formEdit": {
+    "deleteProduct": "Supprimer ce produit",
+    "backToMenu": "Retour au menu",
+    "tableHeaders": {
+      "identifier": "Identifiant",
+      "measure": "Cotes relevée / Measure",
+      "unit": "Unité / unit",
+      "measureCount": "Nombre de mesure(s)",
+      "tolerancePlus": "Tolérance +",
+      "toleranceMinus": "Tolérance -",
+      "nominalDimension": "Cote nominale",
+      "deviation": "Deviation",
+      "type": "Type",
+      "ref": "Réf",
+      "calibrationDate": "date de validité de l'étalonnage"
+    },
+    "placeholder": "Saisissez votre réponse"
+  },
+  "modals": {
+    "draftName": {
+      "title": "Nom du brouillon",
+      "description": "Donnez un nom à ce brouillon :",
+      "placeholder": "Ex. Chantier Îlot A"
+    },
+    "overwrite": {
+      "title": "Remplacer le brouillon ?",
+      "description": "Un brouillon nommé « {{name}} » existe déjà. Souhaitez-vous le remplacer ?",
+      "replace": "Remplacer"
+    }
+  },
+  "products": {
+    "stabilisateur": {
+      "name": "STABILISATEUR",
+      "description": "Inspection du stabilisateur"
+    },
+    "emboutCharbon": {
+      "name": "Embout Charbon",
+      "description": "Inspection de l'embout charbon"
+    },
+    "questions": {
+      "visualState": "ETAT VISUEL",
+      "fabricationProgress": "AVANCEMENT DE LA FABRICATION",
+      "comment": "Commentaire",
+      "commentHelper": "Notes, anomalies ou remarques",
+      "value": "{{id}} - Valeur",
+      "measureCount": "{{id}} - Nombre de mesure",
+      "tolerancePlus": "{{id}} - Tolérance +",
+      "toleranceMinus": "{{id}} - Tolérance -",
+      "nominalDimension": "{{id}} - Cote nominal",
+      "deviation": "{{id}} - Déviation",
+      "type": "{{id}} - Type",
+      "ref": "{{id}} - Ref",
+      "calibrationDate": "{{id}} - Date de validité de l'étalonnage"
+    },
+    "options": {
+      "good": "BON",
+      "average": "MOYEN",
+      "bad": "MAUVAIS",
+      "conformePlans": "CONFORME AUX PLANS",
+      "late": "EN RETARD",
+      "critical": "CRITIQUE"
+    },
+    "helpers": {
+      "integerExpected": "Entier attendu",
+      "decimalExpected": "Chiffre à virgule attendu",
+      "freeText": "Texte libre"
+    }
+  },
+  "errors": {
+    "folderSelectionError": "Erreur lors de la sélection du dossier",
+    "saveDraftError": "Erreur lors de la sauvegarde du brouillon",
+    "overwriteError": "Erreur lors du remplacement du brouillon",
+    "loadDraftError": "Erreur lors du chargement du brouillon",
+    "deleteDraftError": "Erreur lors de la suppression du brouillon"
+  },
+  "confirmations": {
+    "deleteDraft": "Êtes-vous sûr de vouloir supprimer le brouillon « {{name}} » ?",
+    "noResponse": "Aucune réponse fournie."
+  }
+}
+

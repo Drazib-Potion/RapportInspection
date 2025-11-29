@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAppContext } from '../contexts/AppContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import type { ProductQuestion, TableRow } from '../utils/types';
 
 // Champs attendus pour le format tableau
@@ -78,6 +79,7 @@ const FormEdit: React.FC = () => {
     handleDeleteEntry,
     handleReturnToMenu,
   } = useAppContext();
+  const { t } = useLanguage();
 
   if (!selectedProduct) {
     return null;
@@ -114,17 +116,17 @@ const FormEdit: React.FC = () => {
             <table className="measurement-table">
               <thead>
                 <tr>
-                  <th>Identifiant</th>
-                  <th>Cotes relevée / Measure</th>
-                  <th>Unité / unit</th>
-                  <th>Nombre de mesure(s)</th>
-                  <th> Tolérance +</th>
-                  <th> Tolérance -</th>
-                  <th>Cote nominale</th>
-                  <th>Deviation</th>
-                  <th>Type</th>
-                  <th>Réf</th>
-                  <th>date de validité de l'étalonnage</th>
+                  <th>{t('formEdit.tableHeaders.identifier')}</th>
+                  <th>{t('formEdit.tableHeaders.measure')}</th>
+                  <th>{t('formEdit.tableHeaders.unit')}</th>
+                  <th>{t('formEdit.tableHeaders.measureCount')}</th>
+                  <th>{t('formEdit.tableHeaders.tolerancePlus')}</th>
+                  <th>{t('formEdit.tableHeaders.toleranceMinus')}</th>
+                  <th>{t('formEdit.tableHeaders.nominalDimension')}</th>
+                  <th>{t('formEdit.tableHeaders.deviation')}</th>
+                  <th>{t('formEdit.tableHeaders.type')}</th>
+                  <th>{t('formEdit.tableHeaders.ref')}</th>
+                  <th>{t('formEdit.tableHeaders.calibrationDate')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -244,9 +246,6 @@ const FormEdit: React.FC = () => {
                           />
                           <div className="choice-option-content">
                             <div className="choice-option-label">{option.label}</div>
-                            {option.labelEn && (
-                              <div className="choice-option-label-en">{option.labelEn}</div>
-                            )}
                           </div>
                         </label>
                       ))}
@@ -263,7 +262,7 @@ const FormEdit: React.FC = () => {
                     <textarea
                       rows={3}
                       value={currentAnswers[question.id] ?? ''}
-                      placeholder="Saisissez votre réponse"
+                      placeholder={t('formEdit.placeholder')}
                       onChange={(event) => answerChange(question.id, event.target.value)}
                     />
                   ) : question.type === 'checkbox' ? (
@@ -276,7 +275,7 @@ const FormEdit: React.FC = () => {
                     <input
                       type="text"
                       value={currentAnswers[question.id] ?? ''}
-                      placeholder="Saisissez votre réponse"
+                      placeholder={t('formEdit.placeholder')}
                       onChange={(event) => answerChange(question.id, event.target.value)}
                     />
                   )}
@@ -294,14 +293,14 @@ const FormEdit: React.FC = () => {
               onClick={() => handleDeleteEntry(activeEntryIndex)}
               style={{ marginRight: 'auto' }}
             >
-              Supprimer ce produit
+              {t('formEdit.deleteProduct')}
             </button>
           )}
           <button
             className="primary-btn"
             onClick={handleReturnToMenu}
           >
-            Retour au menu
+            {t('formEdit.backToMenu')}
           </button>
         </div>
       </section>

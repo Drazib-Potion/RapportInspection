@@ -1,0 +1,130 @@
+{
+  "common": {
+    "appTitle": "Inspection Report",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "load": "Load",
+    "edit": "Edit",
+    "back": "Back",
+    "clear": "Clear",
+    "export": "Export",
+    "excel": "Excel"
+  },
+  "mainMenu": {
+    "title": "Local drafts",
+    "folderSelected": "Selected folder: {{folder}}",
+    "selectFolderWarning": "⚠️ Select a drafts folder to get started. This step is mandatory.",
+    "desktopOnly": "Feature available only in the desktop application.",
+    "chooseFolder": "Choose a folder",
+    "clearFolder": "Clear",
+    "searchPlaceholder": "Search for a draft",
+    "loadingDrafts": "Loading drafts…",
+    "noDraftsInFolder": "No drafts in this folder yet.",
+    "chooseFolderToSeeDrafts": "Choose a folder to see your drafts.",
+    "productsCount": "{{count}} product(s)",
+    "identifyAffaire": "1. Identify the project",
+    "affaireDescription": "This name will accompany all inspected products.",
+    "newAffaire": "New project",
+    "affaireNameLabel": "Project name",
+    "affaireNamePlaceholder": "Ex. Site Block A",
+    "affaireNamePlaceholderDisabled": "First select a drafts folder",
+    "selectFolderFirst": "First select a drafts folder",
+    "exportExcel": "Export Excel",
+    "saveDraft": "Save draft",
+    "startInspection": "Start inspection",
+    "addAnotherProduct": "Add another product",
+    "completedProducts": "Entered products",
+    "conformePlans": "IN ACCORDANCE WITH PLANS",
+    "enRetard": "LATE",
+    "critique": "CRITICAL",
+    "modifyProduct": "Modify this product",
+    "visualState": "Visual state:",
+    "progress": "Progress:"
+  },
+  "productSelection": {
+    "backToMenu": "Back to menu",
+    "questionsToAnswer": "Questions to answer:",
+    "chooseProduct": "Choose this product"
+  },
+  "formEdit": {
+    "deleteProduct": "Delete this product",
+    "backToMenu": "Back to menu",
+    "tableHeaders": {
+      "identifier": "Identifier",
+      "measure": "Measured dimension / Measure",
+      "unit": "Unit / unit",
+      "measureCount": "Number of measurement(s)",
+      "tolerancePlus": "Tolerance +",
+      "toleranceMinus": "Tolerance -",
+      "nominalDimension": "Nominal dimension",
+      "deviation": "Deviation",
+      "type": "Type",
+      "ref": "Ref",
+      "calibrationDate": "calibration validity date"
+    },
+    "placeholder": "Enter your answer"
+  },
+  "modals": {
+    "draftName": {
+      "title": "Draft name",
+      "description": "Give a name to this draft:",
+      "placeholder": "Ex. Site Block A"
+    },
+    "overwrite": {
+      "title": "Replace the draft?",
+      "description": "A draft named « {{name}} » already exists. Do you want to replace it?",
+      "replace": "Replace"
+    }
+  },
+  "products": {
+    "stabilisateur": {
+      "name": "STABILIZER",
+      "description": "Stabilizer inspection"
+    },
+    "emboutCharbon": {
+      "name": "Carbon Tip",
+      "description": "Carbon tip inspection"
+    },
+    "questions": {
+      "visualState": "VISUAL STATE",
+      "fabricationProgress": "FABRICATION PROGRESS",
+      "comment": "Comment",
+      "commentHelper": "Notes, anomalies or remarks",
+      "value": "{{id}} - Value",
+      "measureCount": "{{id}} - Number of measurement",
+      "tolerancePlus": "{{id}} - Tolerance +",
+      "toleranceMinus": "{{id}} - Tolerance -",
+      "nominalDimension": "{{id}} - Nominal dimension",
+      "deviation": "{{id}} - Deviation",
+      "type": "{{id}} - Type",
+      "ref": "{{id}} - Ref",
+      "calibrationDate": "{{id}} - Calibration validity date"
+    },
+    "options": {
+      "good": "GOOD",
+      "average": "AVERAGE",
+      "bad": "BAD",
+      "conformePlans": "IN ACCORDANCE WITH PLANS",
+      "late": "LATE",
+      "critical": "CRITICAL"
+    },
+    "helpers": {
+      "integerExpected": "Integer expected",
+      "decimalExpected": "Decimal number expected",
+      "freeText": "Free text"
+    }
+  },
+  "errors": {
+    "folderSelectionError": "Error selecting folder",
+    "saveDraftError": "Error saving draft",
+    "overwriteError": "Error replacing draft",
+    "loadDraftError": "Error loading draft",
+    "deleteDraftError": "Error deleting draft"
+  },
+  "confirmations": {
+    "deleteDraft": "Are you sure you want to delete the draft « {{name}} »?",
+    "noResponse": "No response provided."
+  }
+}
+

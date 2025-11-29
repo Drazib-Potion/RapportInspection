@@ -1,22 +1,28 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../contexts/AppContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import type { CompletedEntry } from '../utils/types';
 
-// Helper pour obtenir le label d'une question de type choice
-const getChoiceLabel = (entry: CompletedEntry, questionId: string): string | null => {
-  const question = entry.product.normalQuestions?.find(q => q.id === questionId);
-  if (!question || question.type !== 'choice' || !question.options) {
-    return null;
-  }
-  
+// Helper pour obtenir le label d'une question de type choice traduit avec i18n
+const getChoiceLabel = (entry: CompletedEntry, questionId: string, t: (key: string) => string): string | null => {
   const answerValue = entry.answers[questionId];
   if (!answerValue) {
     return null;
   }
   
-  const option = question.options.find(opt => opt.value === answerValue);
-  return option ? option.label : null;
+  // Mapping des valeurs vers les clés de traduction
+  const valueToTranslationKey: Record<string, string> = {
+    'bon': 'products.options.good',
+    'moyen': 'products.options.average',
+    'mauvais': 'products.options.bad',
+    'conforme_plans': 'products.options.conformePlans',
+    'en_retard': 'products.options.late',
+    'critique': 'products.options.critical',
+  };
+  
+  const translationKey = valueToTranslationKey[answerValue];
+  return translationKey ? t(translationKey) : answerValue;
 };
 
 // Helper pour obtenir la couleur de bordure selon l'avancement
@@ -58,6 +64,7 @@ const MainMenu: React.FC = () => {
     editEntry,
   } = useAppContext();
 
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = React.useState('');
   const filteredDrafts = drafts.filter((draft) =>
@@ -66,7 +73,10 @@ const MainMenu: React.FC = () => {
 
   const trimmedAffaire = affaireName.trim();
   const canStart = Boolean(trimmedAffaire && draftsDirectory);
-  const startButtonLabel = completedEntries.length > 0 ? 'Ajouter un autre produit' : "Démarrer l'inspection";
+  const canExport = Boolean(trimmedAffaire && draftsDirectory && completedEntries.length > 0);
+  const startButtonLabel = completedEntries.length > 0 
+    ? t('mainMenu.addAnotherProduct') 
+    : t('mainMenu.startInspection');
 
   const handleChooseDraftsFolder = async () => {
     try {
@@ -90,23 +100,23 @@ const MainMenu: React.FC = () => {
       <section className="drafts-panel">
         <div className="drafts-header">
           <div>
-            <h3>Brouillons locaux</h3>
+            <h3>{t('mainMenu.title')}</h3>
             <p className="muted">
               {draftsDirectory
-                ? `Dossier sélectionné : ${draftsDirectory}`
-                : '⚠️ Sélectionnez un dossier de brouillons pour commencer. Cette étape est obligatoire.'}
+                ? t('mainMenu.folderSelected', { folder: draftsDirectory })
+                : t('mainMenu.selectFolderWarning')}
             </p>
             {!electronAvailable && (
-              <p className="warning-text">Fonction disponible uniquement dans l'application desktop.</p>
+              <p className="warning-text">{t('mainMenu.desktopOnly')}</p>
             )}
           </div>
           <div className="drafts-actions">
             <button className="ghost-btn" onClick={handleChooseDraftsFolder}>
-              Choisir un dossier
+              {t('mainMenu.chooseFolder')}
             </button>
             {draftsDirectory && (
               <button className="ghost-btn" onClick={handleClearDraftsDirectory}>
-                Effacer
+                {t('mainMenu.clearFolder')}
               </button>
             )}
           </div>
@@ -115,7 +125,7 @@ const MainMenu: React.FC = () => {
         <div className="draft-search">
           <input
             type="text"
-            placeholder="Rechercher un brouillon"
+            placeholder={t('mainMenu.searchPlaceholder')}
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
           />
@@ -125,17 +135,17 @@ const MainMenu: React.FC = () => {
               type="button"
               onClick={() => setSearchTerm('')}
             >
-              Effacer
+              {t('common.clear')}
             </button>
           )}
         </div>
         {draftsLoading ? (
-          <p className="muted">Chargement des brouillons…</p>
+          <p className="muted">{t('mainMenu.loadingDrafts')}</p>
         ) : filteredDrafts.length === 0 ? (
           <p className="muted">
             {draftsDirectory
-              ? 'Aucun brouillon dans ce dossier pour le moment.'
-              : 'Choisissez un dossier pour voir vos brouillons.'}
+              ? t('mainMenu.noDraftsInFolder')
+              : t('mainMenu.chooseFolderToSeeDrafts')}
           </p>
         ) : (
           <div className="drafts-list scrollable">
@@ -144,15 +154,15 @@ const MainMenu: React.FC = () => {
                 <div>
                   <h3>{draft.affaireName}</h3>
                   <p className="muted">
-                    {draft.productCount} produit(s) · {new Date(draft.updatedAt).toLocaleString()}
+                    {t('mainMenu.productsCount', { count: draft.productCount })} · {new Date(draft.updatedAt).toLocaleString()}
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button className="primary-btn" onClick={() => handleLoadDraft(draft.id)}>
-                    Charger
+                    {t('common.load')}
                   </button>
                   <button className="ghost-btn" onClick={() => handleDeleteDraft(draft.id)}>
-                    Supprimer
+                    {t('common.delete')}
                   </button>
                 </div>
               </article>
@@ -164,35 +174,35 @@ const MainMenu: React.FC = () => {
       <br />
       {draftsDirectory && <section className="affaire-card">
         <div>
-          <h2>1. Identifiez l'affaire</h2>
-          <p className="muted">Ce nom accompagnera tous les produits inspectés.</p>
+          <h2>{t('mainMenu.identifyAffaire')}</h2>
+          <p className="muted">{t('mainMenu.affaireDescription')}</p>
           {completedEntries.length > 0 && (
             <button className="ghost-btn" onClick={handleRestart}>
-              Nouvelle affaire
+              {t('mainMenu.newAffaire')}
             </button>
           )}
         </div>
         {!draftsDirectory && (
           <div className="warning-text" style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '4px' }}>
-            ⚠️ Vous devez d'abord sélectionner un dossier de brouillons pour pouvoir démarrer une inspection.
+            {t('mainMenu.selectFolderWarning')}
           </div>
         )}
         <label className="affaire-input">
-          <span>Nom de l'affaire</span>
+          <span>{t('mainMenu.affaireNameLabel')}</span>
           <input
             type="text"
             value={affaireName}
-            placeholder={draftsDirectory ? "Ex. Chantier Îlot A" : "Sélectionnez d'abord un dossier de brouillons"}
+            placeholder={draftsDirectory ? t('mainMenu.affaireNamePlaceholder') : t('mainMenu.affaireNamePlaceholderDisabled')}
             onChange={(event) => setAffaireName(event.target.value)}
             disabled={!draftsDirectory}
             style={{ opacity: draftsDirectory ? 1 : 0.5 }}
           />
         </label>
         <div className="actions-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '0.75rem' }}>
-          <button className="primary-btn" disabled={!canStart}>
+          <button className="primary-btn" disabled={!canExport}>
             <img 
               src="/excel-icon.png" 
-              alt="Excel" 
+              alt={t('common.excel')} 
               style={{ 
                 width: '20px', 
                 height: '20px', 
@@ -200,16 +210,16 @@ const MainMenu: React.FC = () => {
                 verticalAlign: 'middle'
               }} 
             />
-            Export Excel
+            {t('mainMenu.exportExcel')}
           </button>
           {!draftsDirectory && (
             <p className="warning-text" style={{ fontSize: '0.9rem', color: '#856404', textAlign: 'center' }}>
-              Sélectionnez d'abord un dossier de brouillons
+              {t('mainMenu.selectFolderFirst')}
             </p>
           )}
           {completedEntries.length > 0 && (
             <button className="ghost-btn" onClick={handleSaveDraftClick}>
-              Enregistrer le brouillon
+              {t('mainMenu.saveDraft')}
             </button>
           )}
           <button className="ghost-btn" onClick={handleStartInspection} disabled={!canStart}>
@@ -219,7 +229,7 @@ const MainMenu: React.FC = () => {
 
         {completedEntries.length > 0 && (
           <section className="products-section" style={{ gridColumn: '1 / -1' }}>
-            <h2>Produits saisis</h2>
+            <h2>{t('mainMenu.completedProducts')}</h2>
             <div className="legend" style={{ 
               display: 'flex', 
               gap: '1.5rem', 
@@ -238,7 +248,7 @@ const MainMenu: React.FC = () => {
                   backgroundColor: '#4CAF50',
                   border: '2px solid #4CAF50'
                 }} />
-                <span><strong>CONFORME AUX PLANS</strong></span>
+                <span><strong>{t('mainMenu.conformePlans')}</strong></span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{ 
@@ -248,7 +258,7 @@ const MainMenu: React.FC = () => {
                   backgroundColor: '#FFC107',
                   border: '2px solid #FFC107'
                 }} />
-                <span><strong>EN RETARD</strong></span>
+                <span><strong>{t('mainMenu.enRetard')}</strong></span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{ 
@@ -258,7 +268,7 @@ const MainMenu: React.FC = () => {
                   backgroundColor: '#F44336',
                   border: '2px solid #F44336'
                 }} />
-                <span><strong>CRITIQUE</strong></span>
+                <span><strong>{t('mainMenu.critique')}</strong></span>
               </div>
             </div>
             <div className="product-grid products-list" style={{ marginTop: '1rem' }}>
@@ -296,19 +306,19 @@ const MainMenu: React.FC = () => {
                       </div>
                     </div>
                     <div className="product-choices" style={{ marginTop: '0.75rem', marginBottom: '0.75rem' }}>
-                      {getChoiceLabel(entry, 'etat_visuel') && (
+                      {getChoiceLabel(entry, 'etat_visuel', t) && (
                         <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>
-                          <strong>État visuel :</strong> {getChoiceLabel(entry, 'etat_visuel')}
+                          <strong>{t('mainMenu.visualState')}</strong> {getChoiceLabel(entry, 'etat_visuel', t)}
                         </p>
                       )}
-                      {getChoiceLabel(entry, 'avancement_fabrication') && (
+                      {getChoiceLabel(entry, 'avancement_fabrication', t) && (
                         <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>
-                          <strong>Avancement :</strong> {getChoiceLabel(entry, 'avancement_fabrication')}
+                          <strong>{t('mainMenu.progress')}</strong> {getChoiceLabel(entry, 'avancement_fabrication', t)}
                         </p>
                       )}
                     </div>
                     <button className="ghost-btn" onClick={() => handleEditEntry(index)}>
-                      Modifier ce produit
+                      {t('mainMenu.modifyProduct')}
                     </button>
                   </article>
                 );

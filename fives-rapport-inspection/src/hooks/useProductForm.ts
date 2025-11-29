@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { PRODUCT_CATALOG } from '../utils/productData';
+import { useProductCatalog } from './useProductCatalog';
 import type { ProductDefinition, CompletedEntry } from '../utils/types';
 
 const createQuestionDefaults = (product: ProductDefinition) => {
@@ -14,12 +14,13 @@ const createQuestionDefaults = (product: ProductDefinition) => {
 };
 
 export const useProductForm = () => {
+  const productCatalog = useProductCatalog();
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>>({});
   const [activeEntryIndex, setActiveEntryIndex] = useState<number | null>(null);
   const [completedEntries, setCompletedEntries] = useState<CompletedEntry[]>([]);
 
-  const selectedProduct = PRODUCT_CATALOG.find(
+  const selectedProduct = productCatalog.find(
     (product) => product.id === selectedProductId
   ) || null;
 

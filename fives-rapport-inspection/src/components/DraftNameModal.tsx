@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface DraftNameModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export const DraftNameModal: React.FC<DraftNameModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const { t } = useLanguage();
   const [draftName, setDraftName] = React.useState(defaultName);
 
   React.useEffect(() => {
@@ -26,13 +28,13 @@ export const DraftNameModal: React.FC<DraftNameModalProps> = ({
   return (
     <div className="modal-overlay">
       <div className="modal-card">
-        <h3>Nom du brouillon</h3>
-        <p className="muted">Donnez un nom à ce brouillon :</p>
+        <h3>{t('modals.draftName.title')}</h3>
+        <p className="muted">{t('modals.draftName.description')}</p>
         <input
           type="text"
           value={draftName}
           onChange={(e) => setDraftName(e.target.value)}
-          placeholder="Ex. Chantier Îlot A"
+          placeholder={t('modals.draftName.placeholder')}
           style={{
             width: '100%',
             padding: '0.75rem',
@@ -53,14 +55,14 @@ export const DraftNameModal: React.FC<DraftNameModalProps> = ({
             className="secondary-btn"
             onClick={onCancel}
           >
-            Annuler
+            {t('common.cancel')}
           </button>
           <button
             className="primary-btn"
             onClick={() => onConfirm(draftName.trim())}
             disabled={!draftName.trim()}
           >
-            Enregistrer
+            {t('common.save')}
           </button>
         </div>
       </div>

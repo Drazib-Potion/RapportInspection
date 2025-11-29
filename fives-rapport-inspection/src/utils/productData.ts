@@ -1,4 +1,5 @@
 import { ProductDefinition, ProductQuestion } from './types';
+import i18nInstance from '../i18n/config';
 
 export const generateProductId = (name: string) =>
   name
@@ -22,8 +23,8 @@ const generateStabilisateurTableQuestions = (): ProductQuestion[] => {
     // Valeur (float sauf ST03 qui est int)
     questions.push({
       id: `${stField}_valeur`,
-      label: `${stField} - Valeur`,
-      helper: isST03 ? 'Entier attendu' : 'Chiffre à virgule attendu',
+      label: (i18nInstance.t as any)('products.questions.value', { id: stField }),
+      helper: isST03 ? (i18nInstance.t as any)('products.helpers.integerExpected') : (i18nInstance.t as any)('products.helpers.decimalExpected'),
       type: 'text',
       unit: isST03 ? 'nbre' : 'mm'
     });
@@ -31,64 +32,64 @@ const generateStabilisateurTableQuestions = (): ProductQuestion[] => {
     // Nombre de mesure (int)
     questions.push({
       id: `${stField}_nombre_mesure`,
-      label: `${stField} - Nombre de mesure`,
-      helper: 'Entier attendu',
+      label: (i18nInstance.t as any)('products.questions.measureCount', { id: stField }),
+      helper: (i18nInstance.t as any)('products.helpers.integerExpected'),
       type: 'text'
     });
 
     // Tolérance + (float)
     questions.push({
       id: `${stField}_tolerance_plus`,
-      label: `${stField} - Tolérance +`,
-      helper: 'Chiffre à virgule attendu',
+      label: (i18nInstance.t as any)('products.questions.tolerancePlus', { id: stField }),
+      helper: (i18nInstance.t as any)('products.helpers.decimalExpected'),
       type: 'text'
     });
 
     // Tolérance - (float)
     questions.push({
       id: `${stField}_tolerance_moins`,
-      label: `${stField} - Tolérance -`,
-      helper: 'Chiffre à virgule attendu',
+      label: (i18nInstance.t as any)('products.questions.toleranceMinus', { id: stField }),
+      helper: (i18nInstance.t as any)('products.helpers.decimalExpected'),
       type: 'text'
     });
 
     // Cote nominal (float)
     questions.push({
       id: `${stField}_cote_nominal`,
-      label: `${stField} - Cote nominal`,
-      helper: 'Chiffre à virgule attendu',
+      label: (i18nInstance.t as any)('products.questions.nominalDimension', { id: stField }),
+      helper: (i18nInstance.t as any)('products.helpers.decimalExpected'),
       type: 'text'
     });
 
     // Déviation (int)
     questions.push({
       id: `${stField}_deviation`,
-      label: `${stField} - Déviation`,
-      helper: 'Entier attendu',
+      label: (i18nInstance.t as any)('products.questions.deviation', { id: stField }),
+      helper: (i18nInstance.t as any)('products.helpers.integerExpected'),
       type: 'text'
     });
 
     // Type (text libre)
     questions.push({
       id: `${stField}_type`,
-      label: `${stField} - Type`,
-      helper: 'Texte libre',
+      label: (i18nInstance.t as any)('products.questions.type', { id: stField }),
+      helper: (i18nInstance.t as any)('products.helpers.freeText'),
       type: 'text'
     });
 
     // Ref (text libre)
     questions.push({
       id: `${stField}_ref`,
-      label: `${stField} - Ref`,
-      helper: 'Texte libre',
+      label: (i18nInstance.t as any)('products.questions.ref', { id: stField }),
+      helper: (i18nInstance.t as any)('products.helpers.freeText'),
       type: 'text'
     });
 
     // Date de validité de l'étalonnage (text libre)
     questions.push({
       id: `${stField}_date_etalonnage`,
-      label: `${stField} - Date de validité de l'étalonnage`,
-      helper: 'Texte libre',
+      label: (i18nInstance.t as any)('products.questions.calibrationDate', { id: stField }),
+      helper: (i18nInstance.t as any)('products.helpers.freeText'),
       type: 'text'
     });
   });
@@ -109,8 +110,8 @@ const generateEmboutCharbonTableQuestions = (): ProductQuestion[] => {
     const isEC09orEC10 = ecField === 'EC09' || ecField === 'EC10';
     questions.push({
       id: `${ecField}_valeur`,
-      label: `${ecField} - Valeur`,
-      helper: 'Chiffre à virgule attendu',
+      label: (i18nInstance.t as any)('products.questions.value', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.decimalExpected'),
       type: 'text',
       unit: isEC09orEC10 ? '*' : 'mm'
     });
@@ -118,64 +119,64 @@ const generateEmboutCharbonTableQuestions = (): ProductQuestion[] => {
     // Nombre de mesure (int)
     questions.push({
       id: `${ecField}_nombre_mesure`,
-      label: `${ecField} - Nombre de mesure`,
-      helper: 'Entier attendu',
+      label: (i18nInstance.t as any)('products.questions.measureCount', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.integerExpected'),
       type: 'text'
     });
 
     // Tolérance + (float)
     questions.push({
       id: `${ecField}_tolerance_plus`,
-      label: `${ecField} - Tolérance +`,
-      helper: 'Chiffre à virgule attendu',
+      label: (i18nInstance.t as any)('products.questions.tolerancePlus', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.decimalExpected'),
       type: 'text'
     });
 
     // Tolérance - (float)
     questions.push({
       id: `${ecField}_tolerance_moins`,
-      label: `${ecField} - Tolérance -`,
-      helper: 'Chiffre à virgule attendu',
+      label: (i18nInstance.t as any)('products.questions.toleranceMinus', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.decimalExpected'),
       type: 'text'
     });
 
     // Cote nominal (float)
     questions.push({
       id: `${ecField}_cote_nominal`,
-      label: `${ecField} - Cote nominal`,
-      helper: 'Chiffre à virgule attendu',
+      label: (i18nInstance.t as any)('products.questions.nominalDimension', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.decimalExpected'),
       type: 'text'
     });
 
     // Déviation (int)
     questions.push({
       id: `${ecField}_deviation`,
-      label: `${ecField} - Déviation`,
-      helper: 'Entier attendu',
+      label: (i18nInstance.t as any)('products.questions.deviation', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.integerExpected'),
       type: 'text'
     });
 
     // Type (text libre)
     questions.push({
       id: `${ecField}_type`,
-      label: `${ecField} - Type`,
-      helper: 'Texte libre',
+      label: (i18nInstance.t as any)('products.questions.type', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.freeText'),
       type: 'text'
     });
 
     // Ref (text libre)
     questions.push({
       id: `${ecField}_ref`,
-      label: `${ecField} - Ref`,
-      helper: 'Texte libre',
+      label: (i18nInstance.t as any)('products.questions.ref', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.freeText'),
       type: 'text'
     });
 
     // Date de validité de l'étalonnage (text libre)
     questions.push({
       id: `${ecField}_date_etalonnage`,
-      label: `${ecField} - Date de validité de l'étalonnage`,
-      helper: 'Texte libre',
+      label: (i18nInstance.t as any)('products.questions.calibrationDate', { id: ecField }),
+      helper: (i18nInstance.t as any)('products.helpers.freeText'),
       type: 'text'
     });
   });
@@ -183,123 +184,116 @@ const generateEmboutCharbonTableQuestions = (): ProductQuestion[] => {
   return questions;
 };
 
-export const PRODUCT_CATALOG: ProductDefinition[] = [
-  {
-    id: generateProductId('STABILISATEUR'),
-    name: 'STABILISATEUR',
-    description: 'Inspection du stabilisateur',
-    tableQuestions: generateStabilisateurTableQuestions(),
-    normalQuestions: [
-      {
-        id: 'etat_visuel',
-        label: 'ETAT VISUEL',
-        type: 'choice',
-        options: [
-          {
-            value: 'bon',
-            label: 'BON',
-            labelEn: 'GOOD'
-          },
-          {
-            value: 'moyen',
-            label: 'MOYEN',
-            labelEn: 'AVERAGE'
-          },
-          {
-            value: 'mauvais',
-            label: 'MAUVAIS',
-            labelEn: 'BAD'
-          }
-        ]
-      },
-      {
-        id: 'avancement_fabrication',
-        label: 'AVANCEMENT DE LA FABRICATION',
-        type: 'choice',
-        options: [
-          {
-            value: 'conforme_plans',
-            label: 'CONFORME AUX PLANS',
-            labelEn: 'IN ACCORDANCE WITH PLANS'
-          },
-          {
-            value: 'en_retard',
-            label: 'EN RETARD',
-            labelEn: 'LATE'
-          },
-          {
-            value: 'critique',
-            label: 'CRITIQUE',
-            labelEn: 'CRITICAL'
-          }
-        ]
-      },
-      {
-        id: 'commentaire',
-        label: 'Commentaire',
-        helper: 'Notes, anomalies ou remarques',
-        type: 'textarea'
-      }
-    ],
-    imagePath: '/productImg/stabilisateur.svg'
-  },
-  {
-    id: generateProductId('Embout Charbon'),
-    name: 'Embout Charbon',
-    description: 'Inspection de l\'embout charbon',
-    tableQuestions: generateEmboutCharbonTableQuestions(),
-    normalQuestions: [
-      {
-        id: 'etat_visuel',
-        label: 'ETAT VISUEL',
-        type: 'choice',
-        options: [
-          {
-            value: 'bon',
-            label: 'BON',
-            labelEn: 'GOOD'
-          },
-          {
-            value: 'moyen',
-            label: 'MOYEN',
-            labelEn: 'AVERAGE'
-          },
-          {
-            value: 'mauvais',
-            label: 'MAUVAIS',
-            labelEn: 'BAD'
-          }
-        ]
-      },
-      {
-        id: 'avancement_fabrication',
-        label: 'AVANCEMENT DE LA FABRICATION',
-        type: 'choice',
-        options: [
-          {
-            value: 'conforme_plans',
-            label: 'CONFORME AUX PLANS',
-            labelEn: 'IN ACCORDANCE WITH PLANS'
-          },
-          {
-            value: 'en_retard',
-            label: 'EN RETARD',
-            labelEn: 'LATE'
-          },
-          {
-            value: 'critique',
-            label: 'CRITIQUE',
-            labelEn: 'CRITICAL'
-          }
-        ]
-      },
-      {
-        id: 'commentaire',
-        label: 'Commentaire',
-        helper: 'Notes, anomalies ou remarques',
-        type: 'textarea'
-      }
-    ],
-    imagePath: '/productImg/embout-charbon.svg'
-  },
-];
+export const getProductCatalog = (): ProductDefinition[] => {
+  return [
+    {
+      id: generateProductId('STABILISATEUR'),
+      name: (i18nInstance.t as any)('products.stabilisateur.name'),
+      description: (i18nInstance.t as any)('products.stabilisateur.description'),
+      tableQuestions: generateStabilisateurTableQuestions(),
+      normalQuestions: [
+        {
+          id: 'etat_visuel',
+          label: (i18nInstance.t as any)('products.questions.visualState'),
+          type: 'choice',
+          options: [
+            {
+              value: 'bon',
+              label: (i18nInstance.t as any)('products.options.good'),
+            },
+            {
+              value: 'moyen',
+              label: (i18nInstance.t as any)('products.options.average'),
+            },
+            {
+              value: 'mauvais',
+              label: (i18nInstance.t as any)('products.options.bad'),
+            }
+          ]
+        },
+        {
+          id: 'avancement_fabrication',
+          label: (i18nInstance.t as any)('products.questions.fabricationProgress'),
+          type: 'choice',
+          options: [
+            {
+              value: 'conforme_plans',
+              label: (i18nInstance.t as any)('products.options.conformePlans'),
+            },
+            {
+              value: 'en_retard',
+              label: (i18nInstance.t as any)('products.options.late'),
+            },
+            {
+              value: 'critique',
+              label: (i18nInstance.t as any)('products.options.critical'),
+            }
+          ]
+        },
+        {
+          id: 'commentaire',
+          label: (i18nInstance.t as any)('products.questions.comment'),
+          helper: (i18nInstance.t as any)('products.questions.commentHelper'),
+          type: 'textarea'
+        }
+      ],
+      imagePath: '/productImg/stabilisateur.svg'
+    },
+    {
+      id: generateProductId('Embout Charbon'),
+      name: (i18nInstance.t as any)('products.emboutCharbon.name'),
+      description: (i18nInstance.t as any)('products.emboutCharbon.description'),
+      tableQuestions: generateEmboutCharbonTableQuestions(),
+      normalQuestions: [
+        {
+          id: 'etat_visuel',
+          label: (i18nInstance.t as any)('products.questions.visualState'),
+          type: 'choice',
+          options: [
+            {
+              value: 'bon',
+              label: (i18nInstance.t as any)('products.options.good'),
+            },
+            {
+              value: 'moyen',
+              label: (i18nInstance.t as any)('products.options.average'),
+            },
+            {
+              value: 'mauvais',
+              label: (i18nInstance.t as any)('products.options.bad'),
+            }
+          ]
+        },
+        {
+          id: 'avancement_fabrication',
+          label: (i18nInstance.t as any)('products.questions.fabricationProgress'),
+          type: 'choice',
+          options: [
+            {
+              value: 'conforme_plans',
+              label: (i18nInstance.t as any)('products.options.conformePlans'),
+            },
+            {
+              value: 'en_retard',
+              label: (i18nInstance.t as any)('products.options.late'),
+            },
+            {
+              value: 'critique',
+              label: (i18nInstance.t as any)('products.options.critical'),
+            }
+          ]
+        },
+        {
+          id: 'commentaire',
+          label: (i18nInstance.t as any)('products.questions.comment'),
+          helper: (i18nInstance.t as any)('products.questions.commentHelper'),
+          type: 'textarea'
+        }
+      ],
+      imagePath: '/productImg/embout-charbon.svg'
+    },
+  ];
+};
+
+// Export pour compatibilité avec le code existant
+export const PRODUCT_CATALOG = getProductCatalog();

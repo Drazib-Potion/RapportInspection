@@ -3,7 +3,6 @@ export type Step = 'productSelection' | 'productForm';
 export type ChoiceOption = {
   value: string;
   label: string;
-  labelEn?: string; // Traduction anglaise optionnelle
 };
 
 export type ProductQuestion = {

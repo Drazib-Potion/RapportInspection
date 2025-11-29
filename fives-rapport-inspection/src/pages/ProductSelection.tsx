@@ -1,14 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../contexts/AppContext';
-import { PRODUCT_CATALOG } from '../utils/productData';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useProductCatalog } from '../hooks/useProductCatalog';
 
 const ProductSelection: React.FC = () => {
   const navigate = useNavigate();
   const { selectProduct, handleReturnToMenu } = useAppContext();
+  const { t } = useLanguage();
+  const productCatalog = useProductCatalog();
 
   const handleSelectProduct = (productId: string) => {
-    const product = PRODUCT_CATALOG.find(p => p.id === productId);
+    const product = productCatalog.find(p => p.id === productId);
     if (product) {
       selectProduct(product);
       navigate(`/form/${product.id}`);
@@ -19,11 +22,11 @@ const ProductSelection: React.FC = () => {
     <section>
       <div className="actions-row" style={{ marginBottom: '1.5rem', justifyContent: 'flex-start' }}>
         <button className="secondary-btn" onClick={handleReturnToMenu}>
-          Retour au menu
+          {t('productSelection.backToMenu')}
         </button>
       </div>
       <div className="product-grid">
-        {PRODUCT_CATALOG.map((product) => (
+        {productCatalog.map((product) => (
           <article key={product.id} className="product-card">
             <div className="product-header">
               <div>
@@ -36,14 +39,14 @@ const ProductSelection: React.FC = () => {
             </div>
             <div className="field-group">
               <p>
-                Questions à répondre : <strong>{
+                {t('productSelection.questionsToAnswer')} <strong>{
                   (product.tableQuestions?.length ?? 0) + 
                   (product.normalQuestions?.length ?? 0)
                 }</strong>
               </p>
             </div>
             <button className="primary-btn" onClick={() => handleSelectProduct(product.id)}>
-              Choisir ce produit
+              {t('productSelection.chooseProduct')}
             </button>
           </article>
         ))}

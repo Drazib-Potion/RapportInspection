@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { AppProvider, useAppContext } from './contexts/AppContext';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { LanguageSelector } from './components/LanguageSelector';
+import { AppTitle } from './components/AppTitle';
 import MainMenu from './pages/MainMenu';
 import ProductSelection from './pages/ProductSelection';
 import FormEdit from './pages/FormEdit';
@@ -53,11 +56,25 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <AppProvider>
-        <div className="app-shell">
-          <AppRoutes />
-        </div>
-      </AppProvider>
+      <LanguageProvider>
+        <AppProvider>
+          <div className="app-shell">
+            <header className="app-header-top">
+              <div className="header-logo">
+                <img 
+                  src="/fivesLoginimg.png" 
+                  alt="Fives Pillard" 
+                  className="logo-image"
+                />
+              </div>
+              <AppTitle />
+              <div className="header-spacer"></div>
+              <LanguageSelector />
+            </header>
+            <AppRoutes />
+          </div>
+        </AppProvider>
+      </LanguageProvider>
     </BrowserRouter>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface OverwriteModalProps {
   isOpen: boolean;
@@ -13,22 +14,22 @@ export const OverwriteModal: React.FC<OverwriteModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const { t } = useLanguage();
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
       <div className="modal-card">
-        <h3>Remplacer le brouillon ?</h3>
+        <h3>{t('modals.overwrite.title')}</h3>
         <p className="muted">
-          Un brouillon nommé « {draftName} » existe déjà. Souhaitez-vous le
-          remplacer ?
+          {t('modals.overwrite.description', { name: draftName })}
         </p>
         <div className="actions-row" style={{ marginTop: '1rem' }}>
           <button className="secondary-btn" onClick={onCancel}>
-            Annuler
+            {t('common.cancel')}
           </button>
           <button className="primary-btn" onClick={onConfirm}>
-            Remplacer
+            {t('modals.overwrite.replace')}
           </button>
         </div>
       </div>
