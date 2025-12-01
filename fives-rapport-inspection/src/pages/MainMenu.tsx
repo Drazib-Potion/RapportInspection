@@ -48,6 +48,10 @@ const MainMenu: React.FC = () => {
   const {
     affaireName,
     setAffaireName,
+    controleIntermediaire,
+    setControleIntermediaire,
+    controleFinal,
+    setControleFinal,
     completedEntries,
     draftsDirectory,
     drafts,
@@ -93,6 +97,29 @@ const MainMenu: React.FC = () => {
   const handleEditEntry = (index: number) => {
     editEntry(index);
     navigate(`/form/${completedEntries[index].product.id}`);
+  };
+
+  const handleExportPDF = async () => {
+    if (!electronAvailable || !window.electron?.exportPDF) {
+      alert(t('mainMenu.desktopOnly'));
+      return;
+    }
+
+    if (!canExport) {
+      return;
+    }
+
+    try {
+      await window.electron.exportPDF({
+        affaireName,
+        controleIntermediaire,
+        controleFinal,
+        entries: completedEntries
+      });
+    } catch (error) {
+      console.error('Erreur lors de l\'export PDF', error);
+      alert('Erreur lors de l\'export PDF. Veuillez réessayer.');
+    }
   };
 
   return (
@@ -187,30 +214,57 @@ const MainMenu: React.FC = () => {
             {t('mainMenu.selectFolderWarning')}
           </div>
         )}
-        <label className="affaire-input">
-          <span>{t('mainMenu.affaireNameLabel')}</span>
-          <input
-            type="text"
-            value={affaireName}
-            placeholder={draftsDirectory ? t('mainMenu.affaireNamePlaceholder') : t('mainMenu.affaireNamePlaceholderDisabled')}
-            onChange={(event) => setAffaireName(event.target.value)}
-            disabled={!draftsDirectory}
-            style={{ opacity: draftsDirectory ? 1 : 0.5 }}
-          />
-        </label>
-        <div className="actions-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '0.75rem' }}>
-          <button className="primary-btn" disabled={!canExport}>
-            <img 
-              src="/excel-icon.png" 
-              alt={t('common.excel')} 
-              style={{ 
-                width: '20px', 
-                height: '20px', 
-                marginRight: '0.5rem',
-                verticalAlign: 'middle'
-              }} 
+        <div>
+          <label className="affaire-input">
+            <span>{t('mainMenu.affaireNameLabel')}</span>
+            <input
+              type="text"
+              value={affaireName}
+              placeholder={draftsDirectory ? t('mainMenu.affaireNamePlaceholder') : t('mainMenu.affaireNamePlaceholderDisabled')}
+              onChange={(event) => setAffaireName(event.target.value)}
+              disabled={!draftsDirectory}
+              style={{ opacity: draftsDirectory ? 1 : 0.5 }}
             />
-            {t('mainMenu.exportExcel')}
+          </label>
+          <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: draftsDirectory ? 'pointer' : 'not-allowed', opacity: draftsDirectory ? 1 : 0.5 }}>
+              <input
+                type="checkbox"
+                checked={controleIntermediaire}
+                onChange={(event) => {
+                  if (draftsDirectory) {
+                    setControleIntermediaire(event.target.checked);
+                    if (event.target.checked) {
+                      setControleFinal(false);
+                    }
+                  }
+                }}
+                disabled={!draftsDirectory}
+              />
+              <span>{t('mainMenu.controleIntermediaire')}</span>
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: draftsDirectory ? 'pointer' : 'not-allowed', opacity: draftsDirectory ? 1 : 0.5 }}>
+              <input
+                type="checkbox"
+                checked={controleFinal}
+                onChange={(event) => {
+                  if (draftsDirectory) {
+                    setControleFinal(event.target.checked);
+                    if (event.target.checked) {
+                      setControleIntermediaire(false);
+                    }
+                  }
+                }}
+                disabled={!draftsDirectory}
+              />
+              <span>{t('mainMenu.controleFinal')}</span>
+            </label>
+          </div>
+        </div>
+        <div className="actions-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '0.75rem' }}>
+          <button className="primary-btn" onClick={handleExportPDF} disabled={!canExport}>
+            <span style={{ marginRight: '0.5rem' }}>📄</span>
+            {t('mainMenu.exportPDF')}
           </button>
           {!draftsDirectory && (
             <p className="warning-text" style={{ fontSize: '0.9rem', color: '#856404', textAlign: 'center' }}>

@@ -38,12 +38,12 @@ const ProductSelection: React.FC = () => {
               </div>
             </div>
             <div className="field-group">
-              <p>
+              {/* <p>
                 {t('productSelection.questionsToAnswer')} <strong>{
                   (product.tableQuestions?.length ?? 0) + 
                   (product.normalQuestions?.length ?? 0)
                 }</strong>
-              </p>
+              </p> */}
             </div>
             <button className="primary-btn" onClick={() => handleSelectProduct(product.id)}>
               {t('productSelection.chooseProduct')}

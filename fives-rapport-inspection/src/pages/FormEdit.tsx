@@ -94,9 +94,9 @@ const FormEdit: React.FC = () => {
               <p className="product-reference">{selectedProduct.reference}</p>
             )}
           </div>
-          <span className="product-id">{selectedProduct.id}</span>
+          {/* <span className="product-id">{selectedProduct.id}</span> */}
         </div>
-        <p className="muted">{selectedProduct.description}</p>
+        {/* <p className="muted">{selectedProduct.description}</p> */}
         {selectedProduct.imagePath && (
           <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
             <img

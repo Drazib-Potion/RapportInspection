@@ -10,6 +10,10 @@ interface AppContextType {
   // Affaire
   affaireName: string;
   setAffaireName: (name: string) => void;
+  controleIntermediaire: boolean;
+  setControleIntermediaire: (value: boolean) => void;
+  controleFinal: boolean;
+  setControleFinal: (value: boolean) => void;
   
   // Produits et réponses (depuis useProductForm)
   selectedProductId: string | null;
@@ -81,6 +85,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [affaireName, setAffaireName] = useState('');
+  const [controleIntermediaire, setControleIntermediaire] = useState(false);
+  const [controleFinal, setControleFinal] = useState(false);
   const [draftNamePrompt, setDraftNamePrompt] = useState<{ entries: CompletedEntry[]; defaultName: string } | null>(null);
   const [draftNameInput, setDraftNameInput] = useState('');
   const [overwritePrompt, setOverwritePrompt] = useState<{ entries: CompletedEntry[]; draftName: string } | null>(null);
@@ -101,6 +107,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const handleRestart = useCallback(() => {
     productForm.setCompletedEntries([]);
     setAffaireName('');
+    setControleIntermediaire(false);
+    setControleFinal(false);
     productForm.resetFormState();
     navigate('/');
   }, [productForm, navigate]);
@@ -169,14 +177,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       await drafts.saveDraft(drafts.draftsDirectory, {
         affaireName: trimmedAffaire || '',
         draftName: trimmedDraftName,
-        entries: entriesToPersist
+        entries: entriesToPersist,
+        controleIntermediaire,
+        controleFinal
       }, false);
       navigate('/');
       setDraftNamePrompt(null);
     } catch (error) {
       console.error(t('errors.saveDraftError'), error);
     }
-  }, [draftNamePrompt, draftNameInput, productForm, drafts, trimmedAffaire, navigate, t]);
+  }, [draftNamePrompt, draftNameInput, productForm, drafts, trimmedAffaire, controleIntermediaire, controleFinal, navigate, t]);
 
   const confirmOverwriteSave = useCallback(async () => {
     if (!overwritePrompt || !drafts.draftsDirectory) {
@@ -186,7 +196,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       await drafts.saveDraft(drafts.draftsDirectory, {
         affaireName: trimmedAffaire || '',
         draftName: overwritePrompt.draftName,
-        entries: overwritePrompt.entries
+        entries: overwritePrompt.entries,
+        controleIntermediaire,
+        controleFinal
       }, true);
       navigate('/');
     } catch (error) {
@@ -194,13 +206,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setOverwritePrompt(null);
     }
-  }, [overwritePrompt, drafts, trimmedAffaire, navigate, t]);
+  }, [overwritePrompt, drafts, trimmedAffaire, controleIntermediaire, controleFinal, navigate, t]);
 
   const handleLoadDraft = useCallback(async (draftId: string) => {
     try {
       const data = await drafts.loadDraft(draftId);
       const loadedAffaireName = typeof data.affaireName === 'string' ? data.affaireName : '';
       setAffaireName(loadedAffaireName);
+      setControleIntermediaire(data.controleIntermediaire ?? false);
+      setControleFinal(data.controleFinal ?? false);
       productForm.setCompletedEntries(Array.isArray(data.entries) ? data.entries : []);
       productForm.resetFormState();
       navigate('/');
@@ -245,6 +259,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const contextValue: AppContextType = {
     affaireName,
     setAffaireName,
+    controleIntermediaire,
+    setControleIntermediaire,
+    controleFinal,
+    setControleFinal,
     selectedProductId: productForm.selectedProductId,
     setSelectedProductId: productForm.setSelectedProductId,
     selectedProduct: productForm.selectedProduct,

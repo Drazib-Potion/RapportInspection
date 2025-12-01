@@ -55,6 +55,8 @@ export type DraftPayload = {
   affaireName: string;
   draftName: string;
   entries: CompletedEntry[];
+  controleIntermediaire?: boolean;
+  controleFinal?: boolean;
 };
 
 export type DraftData = DraftPayload & {
@@ -68,6 +70,12 @@ export type ElectronBridge = {
   loadDraft: (filePath: string) => Promise<DraftData>;
   deleteDraft: (filePath: string) => Promise<boolean>;
   exportExcel?: (affaireName: string, answers: unknown[]) => Promise<unknown>;
+  exportPDF?: (data: {
+    affaireName: string;
+    controleIntermediaire?: boolean;
+    controleFinal?: boolean;
+    entries: CompletedEntry[];
+  }) => Promise<string | null>;
 };
 
 export type OverwritePrompt = {

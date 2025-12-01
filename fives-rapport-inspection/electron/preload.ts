@@ -11,6 +11,12 @@ contextBridge.exposeInMainWorld('electron', {
   loadDraft: (filePath: string) => ipcRenderer.invoke('load-draft', filePath),
   deleteDraft: (filePath: string) => ipcRenderer.invoke('delete-draft', filePath),
   exportExcel: (affaireName: string, answers: unknown[]) =>
-    ipcRenderer.invoke('export-excel', { affaireName, answers })
+    ipcRenderer.invoke('export-excel', { affaireName, answers }),
+  exportPDF: (data: {
+    affaireName: string;
+    controleIntermediaire?: boolean;
+    controleFinal?: boolean;
+    entries: unknown[];
+  }) => ipcRenderer.invoke('export-pdf', data)
 });
 

@@ -31,6 +31,7 @@
     "affaireNamePlaceholderDisabled": "First select a drafts folder",
     "selectFolderFirst": "First select a drafts folder",
     "exportExcel": "Export Excel",
+    "exportPDF": "Export PDF",
     "saveDraft": "Save draft",
     "startInspection": "Start inspection",
     "addAnotherProduct": "Add another product",
@@ -40,7 +41,9 @@
     "critique": "CRITICAL",
     "modifyProduct": "Modify this product",
     "visualState": "Visual state:",
-    "progress": "Progress:"
+    "progress": "Progress:",
+    "controleIntermediaire": "Intermediate control",
+    "controleFinal": "Final control"
   },
   "productSelection": {
     "backToMenu": "Back to menu",
