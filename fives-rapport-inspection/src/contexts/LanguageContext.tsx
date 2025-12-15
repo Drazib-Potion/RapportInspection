@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 type Language = 'fr' | 'en';
@@ -6,7 +7,7 @@ type Language = 'fr' | 'en';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string, options?: any) => string;
+  t: TFunction<'translation'>;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
