@@ -393,7 +393,7 @@ ipcMain.handle('export-pdf', async (_event, data: ExportPDFData) => {
 
     // Produits inspectés
     if (data.entries && data.entries.length > 0) {
-      doc.fontSize(16).font('Helvetica-Bold').text('Produits inspectés', { underline: true });
+      doc.fontSize(16).font('Helvetica-Bold').text('Produits inspectés', { underline: true, align: 'center' });
       doc.moveDown(0.5);
 
       data.entries.forEach((entry, index) => {
@@ -411,10 +411,10 @@ ipcMain.handle('export-pdf', async (_event, data: ExportPDFData) => {
         doc.moveDown(0.5);
 
         // Description
-        if (entry.product.description) {
-          doc.fontSize(11).font('Helvetica-Oblique').text(entry.product.description);
-          doc.moveDown(0.5);
-        }
+        // if (entry.product.description) {
+        //   doc.fontSize(11).font('Helvetica-Oblique').text(entry.product.description);
+        //   doc.moveDown(0.5);
+        // }
 
         // Questions normales
         if (entry.product.normalQuestions && entry.product.normalQuestions.length > 0) {
@@ -522,13 +522,10 @@ ipcMain.handle('export-pdf', async (_event, data: ExportPDFData) => {
 
           const tableRows: string[][] = rows.map((row) => {
             const valeur = row.fields.valeur?.value || '?';
-            const valeurWithUnit = valeur !== '?' && row.fields.valeur?.unit 
-              ? `${valeur} ${row.fields.valeur.unit}` 
-              : valeur;
             
             return [
               row.identifier,
-              valeurWithUnit,
+              valeur,
               row.unit,
               row.fields.nombre_mesure?.value || '?',
               row.fields.tolerance_plus?.value || '?',
