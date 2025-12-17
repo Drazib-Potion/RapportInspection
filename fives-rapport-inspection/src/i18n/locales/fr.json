@@ -2,6 +2,7 @@
   "common": {
     "appTitle": "Rapport d'inspection",
     "cancel": "Annuler",
+    "confirm": "Confirmer",
     "save": "Enregistrer",
     "delete": "Supprimer",
     "load": "Charger",
@@ -82,6 +83,11 @@
       "title": "Remplacer le brouillon ?",
       "description": "Un brouillon nommé « {{name}} » existe déjà. Souhaitez-vous le remplacer ?",
       "replace": "Remplacer"
+    },
+    "confirmRestart": {
+      "title": "Créer une nouvelle affaire ?",
+      "description": "Toutes les données non sauvegardées ou non exportées seront perdues. Êtes-vous sûr de vouloir continuer ?",
+      "confirm": "Confirmer"
     }
   },
   "products": {

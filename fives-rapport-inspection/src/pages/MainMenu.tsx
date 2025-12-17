@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../contexts/AppContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { ConfirmModal } from '../components/ConfirmModal';
 import type { CompletedEntry } from '../utils/types';
 
 // Helper pour obtenir le label d'une question de type choice traduit avec i18n
@@ -90,6 +91,7 @@ const MainMenu: React.FC = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [showRestartConfirm, setShowRestartConfirm] = React.useState(false);
   const filteredDrafts = drafts.filter((draft) =>
     draft.affaireName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -251,7 +253,7 @@ const MainMenu: React.FC = () => {
           )}
           {completedEntries.length > 0 && (
             <>
-              <button className="ghost-btn" onClick={handleRestart}>
+              <button className="ghost-btn" onClick={() => setShowRestartConfirm(true)}>
                 {t('mainMenu.newAffaire')}
               </button>
               <button className="ghost-btn" onClick={handleSaveDraftClick}>
@@ -427,6 +429,17 @@ const MainMenu: React.FC = () => {
           </section>
         )}
       </section>}
+      <ConfirmModal
+        isOpen={showRestartConfirm}
+        title={t('modals.confirmRestart.title')}
+        description={t('modals.confirmRestart.description')}
+        onConfirm={() => {
+          setShowRestartConfirm(false);
+          handleRestart();
+        }}
+        onCancel={() => setShowRestartConfirm(false)}
+        confirmLabel={t('modals.confirmRestart.confirm')}
+      />
     </>
   );
 };

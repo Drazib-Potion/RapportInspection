@@ -2,6 +2,7 @@
   "common": {
     "appTitle": "Inspection Report",
     "cancel": "Cancel",
+    "confirm": "Confirm",
     "save": "Save",
     "delete": "Delete",
     "load": "Load",
@@ -82,6 +83,11 @@
       "title": "Replace the draft?",
       "description": "A draft named « {{name}} » already exists. Do you want to replace it?",
       "replace": "Replace"
+    },
+    "confirmRestart": {
+      "title": "Create a new project?",
+      "description": "All unsaved or unexported data will be lost. Are you sure you want to continue?",
+      "confirm": "Confirm"
     }
   },
   "products": {
