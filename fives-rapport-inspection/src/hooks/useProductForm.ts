@@ -17,6 +17,7 @@ export const useProductForm = () => {
   const productCatalog = useProductCatalog();
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>>({});
+  const [customName, setCustomName] = useState<string>('');
   const [activeEntryIndex, setActiveEntryIndex] = useState<number | null>(null);
   const [completedEntries, setCompletedEntries] = useState<CompletedEntry[]>([]);
 
@@ -27,12 +28,14 @@ export const useProductForm = () => {
   const resetFormState = useCallback(() => {
     setSelectedProductId(null);
     setCurrentAnswers({});
+    setCustomName('');
     setActiveEntryIndex(null);
   }, []);
 
   const selectProduct = useCallback((product: ProductDefinition) => {
     setSelectedProductId(product.id);
     setCurrentAnswers(createQuestionDefaults(product));
+    setCustomName('');
     setActiveEntryIndex(null);
   }, []);
 
@@ -43,6 +46,7 @@ export const useProductForm = () => {
 
     const entry: CompletedEntry = {
       productId: selectedProduct.id,
+      customName: customName.trim() || undefined,
       answers: currentAnswers
     };
 
@@ -53,12 +57,13 @@ export const useProductForm = () => {
     return completedEntries.map((existingEntry, index) =>
       index === activeEntryIndex ? entry : existingEntry
     );
-  }, [selectedProduct, currentAnswers, completedEntries, activeEntryIndex]);
+  }, [selectedProduct, currentAnswers, customName, completedEntries, activeEntryIndex]);
 
   const editEntry = useCallback((index: number) => {
     const entry = completedEntries[index];
     setSelectedProductId(entry.productId);
     setCurrentAnswers({ ...entry.answers });
+    setCustomName(entry.customName || '');
     setActiveEntryIndex(index);
   }, [completedEntries]);
 
@@ -77,6 +82,8 @@ export const useProductForm = () => {
     selectedProduct,
     currentAnswers,
     setCurrentAnswers,
+    customName,
+    setCustomName,
     activeEntryIndex,
     setActiveEntryIndex,
     completedEntries,

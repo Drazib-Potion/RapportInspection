@@ -38,6 +38,7 @@ export type ProductDefinition = {
 
 export type CompletedEntry = {
   productId: string;
+  customName?: string;
   answers: Record<string, string>;
 };
 
@@ -74,6 +75,7 @@ export type ElectronBridge = {
     controleFinal?: boolean;
     entries: Array<{
       product: ProductDefinition;
+      customName?: string;
       answers: Record<string, string>;
     }>;
   }) => Promise<string | null>;

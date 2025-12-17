@@ -22,6 +22,8 @@ interface AppContextType {
   selectedProduct: ProductDefinition | null;
   currentAnswers: Record<string, string>;
   setCurrentAnswers: (answers: Record<string, string>) => void;
+  customName: string;
+  setCustomName: (name: string) => void;
   activeEntryIndex: number | null;
   setActiveEntryIndex: (index: number | null) => void;
   completedEntries: CompletedEntry[];
@@ -281,6 +283,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     selectedProduct: productForm.selectedProduct,
     currentAnswers: productForm.currentAnswers,
     setCurrentAnswers: productForm.setCurrentAnswers,
+    customName: productForm.customName,
+    setCustomName: productForm.setCustomName,
     activeEntryIndex: productForm.activeEntryIndex,
     setActiveEntryIndex: productForm.setActiveEntryIndex,
     completedEntries: productForm.completedEntries,

@@ -143,6 +143,7 @@ const MainMenu: React.FC = () => {
         }
         return {
           product,
+          customName: entry.customName,
           answers: entry.answers
         };
       });
@@ -413,6 +414,11 @@ const MainMenu: React.FC = () => {
                     <div className="product-header">
                       <div>
                         <h3>{product.name}</h3>
+                        {entry.customName && (
+                          <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem', fontStyle: 'italic' }}>
+                            {entry.customName}
+                          </p>
+                        )}
                         {product.reference && (
                           <p className="product-reference">{product.reference}</p>
                         )}

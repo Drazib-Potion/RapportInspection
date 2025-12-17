@@ -60,6 +60,9 @@
   "formEdit": {
     "deleteProduct": "Delete this product",
     "backToMenu": "Back to menu",
+    "customProductName": "Custom product name",
+    "customProductNamePlaceholder": "Ex. Stab 1, Stab for Site A...",
+    "customProductNameHelper": "Leave empty to use the default product name",
     "tableHeaders": {
       "identifier": "Identifier",
       "measure": "Measured dimension / Measure",

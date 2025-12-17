@@ -73,6 +73,8 @@ const FormEdit: React.FC = () => {
     selectedProduct,
     currentAnswers,
     answerChange,
+    customName,
+    setCustomName,
     activeEntryIndex,
     handleDeleteEntry,
     handleReturnToMenu,
@@ -93,6 +95,26 @@ const FormEdit: React.FC = () => {
             )}
           </div>
           {/* <span className="product-id">{selectedProduct.id}</span> */}
+        </div>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <span style={{ fontWeight: '500' }}>{t('formEdit.customProductName')}</span>
+            <input
+              type="text"
+              value={customName || ''}
+              placeholder={t('formEdit.customProductNamePlaceholder')}
+              onChange={(e) => setCustomName(e.target.value)}
+              style={{ 
+                padding: '0.5rem',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '0.9rem'
+              }}
+            />
+            <span className="muted" style={{ fontSize: '0.85rem' }}>
+              {t('formEdit.customProductNameHelper')}
+            </span>
+          </label>
         </div>
         {/* <p className="muted">{selectedProduct.description}</p> */}
         {selectedProduct.imagePath && (

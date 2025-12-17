@@ -341,6 +341,7 @@ interface ExportPDFData {
         options?: Array<{ value: string; label: string }>;
       }>;
     };
+    customName?: string;
     answers: Record<string, string>;
   }>;
 }
@@ -402,7 +403,8 @@ ipcMain.handle('export-pdf', async (_event, data: ExportPDFData) => {
         }
 
         // Nom du produit
-        doc.fontSize(14).font('Helvetica-Bold').text(`${index + 1}. ${entry.product.name}`);
+        const displayName = entry.customName || entry.product.name;
+        doc.fontSize(14).font('Helvetica-Bold').text(`${index + 1}. ${displayName}`);
         if (entry.product.reference) {
           doc.fontSize(11).font('Helvetica').text(`Référence: ${entry.product.reference}`);
         }
