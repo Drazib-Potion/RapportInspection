@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { handleDecimalInput, calculateDeviationFromRow } from '../utils/deviationUtils';
 import type { ProductQuestion, TableRow } from '../utils/types';
 
 // Champs attendus pour le format tableau
@@ -87,6 +88,11 @@ const FormEdit: React.FC = () => {
   } = useAppContext();
   const { t } = useLanguage();
 
+  // Fonction mémorisée pour gérer la saisie décimale avec les dépendances du composant
+  const handleDecimalInputChange = useCallback((questionId: string, value: string, row?: TableRow) => {
+    handleDecimalInput(questionId, value, answerChange, row, currentAnswers);
+  }, [answerChange, currentAnswers]);
+
   if (!selectedProduct) {
     return null;
   }
@@ -169,8 +175,9 @@ const FormEdit: React.FC = () => {
                           type="text"
                           value={currentAnswers[row.valeur?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => answerChange(row.valeur?.id ?? '', event.target.value)}
+                          onChange={(event) => handleDecimalInputChange(row.valeur?.id ?? '', event.target.value, row)}
                           className="table-input"
+                          inputMode="decimal"
                         />
                       </td>
                       <td className="unit-cell">{row.unit}</td>
@@ -206,17 +213,18 @@ const FormEdit: React.FC = () => {
                           type="text"
                           value={currentAnswers[row.cote_nominal?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => answerChange(row.cote_nominal?.id ?? '', event.target.value)}
+                          onChange={(event) => handleDecimalInputChange(row.cote_nominal?.id ?? '', event.target.value, row)}
                           className="table-input"
+                          inputMode="decimal"
                         />
                       </td>
                       <td className="deviation-cell">
                         <input
                           type="text"
-                          value={currentAnswers[row.deviation?.id ?? ''] ?? ''}
-                          placeholder=""
-                          onChange={(event) => answerChange(row.deviation?.id ?? '', event.target.value)}
+                          value={currentAnswers[row.deviation?.id ?? ''] ?? calculateDeviationFromRow(row, currentAnswers)}
+                          readOnly
                           className="table-input"
+                          style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
                         />
                       </td>
                       <td className="comment-cell">
