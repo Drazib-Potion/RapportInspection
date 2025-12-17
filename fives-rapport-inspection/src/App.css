@@ -701,14 +701,12 @@
   background: #F5F5F5;
 }
 
-.measurement-table .type-cell,
-.measurement-table .ref-cell {
+.measurement-table .comment-cell {
   min-width: 300px;
   width: 120px;
 }
 
-.measurement-table th:nth-child(9),
-.measurement-table th:nth-child(10) {
+.measurement-table th:nth-child(9) {
   min-width: 300px;
   width: 100px;
 }

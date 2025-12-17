@@ -23,9 +23,7 @@ export type TableRow = {
   tolerance_moins: { id: string; helper?: string };
   cote_nominal: { id: string; helper?: string };
   deviation: { id: string; helper?: string };
-  type: { id: string; helper?: string };
-  ref: { id: string; helper?: string };
-  date_etalonnage: { id: string; helper?: string };
+  commentaire: { id: string; helper?: string };
 };
 
 export type ProductDefinition = {

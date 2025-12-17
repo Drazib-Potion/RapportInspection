@@ -11,9 +11,7 @@ const TABLE_FIELDS = [
   'tolerance_moins',
   'cote_nominal',
   'deviation',
-  'type',
-  'ref',
-  'date_etalonnage'
+  'commentaire'
 ];
 
 const parseTableQuestions = (questions: ProductQuestion[]): TableRow[] => {
@@ -124,9 +122,7 @@ const FormEdit: React.FC = () => {
                   <th>{t('formEdit.tableHeaders.toleranceMinus')}</th>
                   <th>{t('formEdit.tableHeaders.nominalDimension')}</th>
                   <th>{t('formEdit.tableHeaders.deviation')}</th>
-                  <th>{t('formEdit.tableHeaders.type')}</th>
-                  <th>{t('formEdit.tableHeaders.ref')}</th>
-                  <th>{t('formEdit.tableHeaders.calibrationDate')}</th>
+                  <th>{t('formEdit.tableHeaders.comment')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -189,30 +185,12 @@ const FormEdit: React.FC = () => {
                           className="table-input"
                         />
                       </td>
-                      <td className="type-cell">
+                      <td className="comment-cell">
                         <input
                           type="text"
-                          value={currentAnswers[row.type?.id ?? ''] ?? ''}
+                          value={currentAnswers[row.commentaire?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => answerChange(row.type?.id ?? '', event.target.value)}
-                          className="table-input"
-                        />
-                      </td>
-                      <td className="ref-cell">
-                        <input
-                          type="text"
-                          value={currentAnswers[row.ref?.id ?? ''] ?? ''}
-                          placeholder=""
-                          onChange={(event) => answerChange(row.ref?.id ?? '', event.target.value)}
-                          className="table-input"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          value={currentAnswers[row.date_etalonnage?.id ?? ''] ?? ''}
-                          placeholder=""
-                          onChange={(event) => answerChange(row.date_etalonnage?.id ?? '', event.target.value)}
+                          onChange={(event) => answerChange(row.commentaire?.id ?? '', event.target.value)}
                           className="table-input"
                         />
                       </td>

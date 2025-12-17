@@ -62,9 +62,7 @@
       "toleranceMinus": "Tolérance -",
       "nominalDimension": "Cote nominale",
       "deviation": "Deviation",
-      "type": "Type",
-      "ref": "Réf",
-      "calibrationDate": "date de validité de l'étalonnage"
+      "comment": "Commentaire"
     },
     "placeholder": "Saisissez votre réponse"
   },
@@ -100,9 +98,7 @@
       "toleranceMinus": "{{id}} - Tolérance -",
       "nominalDimension": "{{id}} - Cote nominal",
       "deviation": "{{id}} - Déviation",
-      "type": "{{id}} - Type",
-      "ref": "{{id}} - Ref",
-      "calibrationDate": "{{id}} - Date de validité de l'étalonnage"
+      "commentRow": "{{id}} - Commentaire"
     },
     "options": {
       "good": "BON",

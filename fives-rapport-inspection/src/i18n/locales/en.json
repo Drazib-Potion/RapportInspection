@@ -62,9 +62,7 @@
       "toleranceMinus": "Tolerance -",
       "nominalDimension": "Nominal dimension",
       "deviation": "Deviation",
-      "type": "Type",
-      "ref": "Ref",
-      "calibrationDate": "calibration validity date"
+      "comment": "Comment"
     },
     "placeholder": "Enter your answer"
   },
@@ -100,9 +98,7 @@
       "toleranceMinus": "{{id}} - Tolerance -",
       "nominalDimension": "{{id}} - Nominal dimension",
       "deviation": "{{id}} - Deviation",
-      "type": "{{id}} - Type",
-      "ref": "{{id}} - Ref",
-      "calibrationDate": "{{id}} - Calibration validity date"
+      "commentRow": "{{id}} - Comment"
     },
     "options": {
       "good": "GOOD",

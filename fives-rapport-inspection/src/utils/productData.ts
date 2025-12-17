@@ -69,26 +69,12 @@ const generateStabilisateurTableQuestions = (): ProductQuestion[] => {
       type: 'text'
     });
 
-    // Type (text libre)
-    questions.push({
-      id: `${stField}_type`,
-      label: (i18nInstance.t as any)('products.questions.type', { id: stField }),
-      helper: (i18nInstance.t as any)('products.helpers.freeText'),
-      type: 'text'
-    });
 
-    // Ref (text libre)
-    questions.push({
-      id: `${stField}_ref`,
-      label: (i18nInstance.t as any)('products.questions.ref', { id: stField }),
-      helper: (i18nInstance.t as any)('products.helpers.freeText'),
-      type: 'text'
-    });
 
-    // Date de validité de l'étalonnage (text libre)
+    // Commentaire (text libre)
     questions.push({
-      id: `${stField}_date_etalonnage`,
-      label: (i18nInstance.t as any)('products.questions.calibrationDate', { id: stField }),
+      id: `${stField}_commentaire`,
+      label: (i18nInstance.t as any)('products.questions.commentRow', { id: stField }),
       helper: (i18nInstance.t as any)('products.helpers.freeText'),
       type: 'text'
     });
@@ -156,26 +142,10 @@ const generateEmboutCharbonTableQuestions = (): ProductQuestion[] => {
       type: 'text'
     });
 
-    // Type (text libre)
+    // Commentaire (text libre)
     questions.push({
-      id: `${ecField}_type`,
-      label: (i18nInstance.t as any)('products.questions.type', { id: ecField }),
-      helper: (i18nInstance.t as any)('products.helpers.freeText'),
-      type: 'text'
-    });
-
-    // Ref (text libre)
-    questions.push({
-      id: `${ecField}_ref`,
-      label: (i18nInstance.t as any)('products.questions.ref', { id: ecField }),
-      helper: (i18nInstance.t as any)('products.helpers.freeText'),
-      type: 'text'
-    });
-
-    // Date de validité de l'étalonnage (text libre)
-    questions.push({
-      id: `${ecField}_date_etalonnage`,
-      label: (i18nInstance.t as any)('products.questions.calibrationDate', { id: ecField }),
+      id: `${ecField}_commentaire`,
+      label: (i18nInstance.t as any)('products.questions.commentRow', { id: ecField }),
       helper: (i18nInstance.t as any)('products.helpers.freeText'),
       type: 'text'
     });

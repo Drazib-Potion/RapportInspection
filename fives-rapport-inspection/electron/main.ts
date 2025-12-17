@@ -443,9 +443,7 @@ ipcMain.handle('export-pdf', async (_event, data: ExportPDFData) => {
             'tolerance_moins',
             'cote_nominal',
             'deviation',
-            'type',
-            'ref',
-            'date_etalonnage'
+            'commentaire'
           ];
 
           const rowsMap = new Map<string, {
@@ -517,9 +515,7 @@ ipcMain.handle('export-pdf', async (_event, data: ExportPDFData) => {
             'Tolérance -',
             'Cote nominale',
             'Deviation',
-            'Type',
-            'Réf',
-            'date de validité de l\'étalonnage'
+            'Commentaire'
           ];
 
           const tableRows: string[][] = rows.map((row) => {
@@ -537,9 +533,7 @@ ipcMain.handle('export-pdf', async (_event, data: ExportPDFData) => {
               row.fields.tolerance_moins?.value || '?',
               row.fields.cote_nominal?.value || '?',
               row.fields.deviation?.value || '?',
-              row.fields.type?.value || '?',
-              row.fields.ref?.value || '?',
-              row.fields.date_etalonnage?.value || '?'
+              row.fields.commentaire?.value || '?'
             ];
           });
 
@@ -554,9 +548,7 @@ ipcMain.handle('export-pdf', async (_event, data: ExportPDFData) => {
             45,   // Tolérance -
             55,   // Cote nominale
             45,   // Deviation
-            50,   // Type
-            40,   // Réf
-            75    // date de validité
+            80    // Commentaire
           ];
 
           // Ajuster les largeurs si nécessaire pour tenir sur la page
