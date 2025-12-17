@@ -106,6 +106,44 @@ export const updateDeviation = (
 };
 
 /**
+ * Vérifie si une valeur mesurée est dans les tolérances par rapport à la cote nominale
+ * @param valeur - La valeur mesurée (string avec virgule ou point)
+ * @param coteNominal - La cote nominale (string avec virgule ou point)
+ * @param tolerancePlus - La tolérance positive (string avec virgule ou point)
+ * @param toleranceMoins - La tolérance négative (string avec virgule ou point)
+ * @returns true si la valeur est dans les tolérances (inclus), false sinon
+ */
+export const isWithinTolerance = (
+  valeur: string,
+  coteNominal: string,
+  tolerancePlus: string,
+  toleranceMoins: string
+): boolean => {
+  if (!valeur || !coteNominal) {
+    return false;
+  }
+  
+  // Convertir les virgules en points pour le calcul
+  const valeurNum = parseFloat(valeur.replace(',', '.'));
+  const coteNominalNum = parseFloat(coteNominal.replace(',', '.'));
+  
+  if (isNaN(valeurNum) || isNaN(coteNominalNum)) {
+    return false;
+  }
+  
+  // Si les tolérances ne sont pas définies, on considère que c'est valide
+  const tolerancePlusNum = tolerancePlus ? parseFloat(tolerancePlus.replace(',', '.')) : 0;
+  const toleranceMoinsNum = toleranceMoins ? parseFloat(toleranceMoins.replace(',', '.')) : 0;
+  
+  // Calculer les bornes
+  const minValue = coteNominalNum - toleranceMoinsNum;
+  const maxValue = coteNominalNum + tolerancePlusNum;
+  
+  // Vérifier si la valeur est dans l'intervalle [minValue, maxValue] (inclus)
+  return valeurNum >= minValue && valeurNum <= maxValue;
+};
+
+/**
  * Gère la saisie d'un nombre décimal et met à jour la déviation si nécessaire
  * @param questionId - L'ID de la question
  * @param value - La valeur saisie

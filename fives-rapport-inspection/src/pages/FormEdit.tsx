@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ConfirmModal } from '../components/ConfirmModal';
-import { handleDecimalInput, calculateDeviationFromRow } from '../utils/deviationUtils';
+import { handleDecimalInput, calculateDeviationFromRow, isWithinTolerance } from '../utils/deviationUtils';
 import type { ProductQuestion, TableRow } from '../utils/types';
 
 // Champs attendus pour le format tableau
@@ -171,14 +171,30 @@ const FormEdit: React.FC = () => {
                     <tr key={row.identifier}>
                       <td className="identifier-cell">{row.identifier}</td>
                       <td className="measure-cell">
-                        <input
-                          type="text"
-                          value={currentAnswers[row.valeur?.id ?? ''] ?? ''}
-                          placeholder=""
-                          onChange={(event) => handleDecimalInputChange(row.valeur?.id ?? '', event.target.value, row)}
-                          className="table-input"
-                          inputMode="decimal"
-                        />
+                        {(() => {
+                          const valeurStr = currentAnswers[row.valeur?.id ?? ''] ?? '';
+                          const coteNominalStr = currentAnswers[row.cote_nominal?.id ?? ''] ?? '';
+                          const tolerancePlusStr = currentAnswers[row.tolerance_plus?.id ?? ''] ?? '';
+                          const toleranceMoinsStr = currentAnswers[row.tolerance_moins?.id ?? ''] ?? '';
+                          
+                          const isValid = valeurStr && coteNominalStr 
+                            ? isWithinTolerance(valeurStr, coteNominalStr, tolerancePlusStr, toleranceMoinsStr)
+                            : null;
+                          
+                          const backgroundColor = isValid === true ? '#d4edda' : isValid === false ? '#f8d7da' : 'transparent';
+                          
+                          return (
+                            <input
+                              type="text"
+                              value={valeurStr}
+                              placeholder=""
+                              onChange={(event) => handleDecimalInputChange(row.valeur?.id ?? '', event.target.value, row)}
+                              className="table-input"
+                              inputMode="decimal"
+                              style={{ backgroundColor }}
+                            />
+                          );
+                        })()}
                       </td>
                       <td className="unit-cell">{row.unit}</td>
                       <td>
@@ -195,8 +211,9 @@ const FormEdit: React.FC = () => {
                           type="text"
                           value={currentAnswers[row.tolerance_plus?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => answerChange(row.tolerance_plus?.id ?? '', event.target.value)}
+                          onChange={(event) => handleDecimalInputChange(row.tolerance_plus?.id ?? '', event.target.value, row)}
                           className="table-input"
+                          inputMode="decimal"
                         />
                       </td>
                       <td>
@@ -204,8 +221,9 @@ const FormEdit: React.FC = () => {
                           type="text"
                           value={currentAnswers[row.tolerance_moins?.id ?? ''] ?? ''}
                           placeholder=""
-                          onChange={(event) => answerChange(row.tolerance_moins?.id ?? '', event.target.value)}
+                          onChange={(event) => handleDecimalInputChange(row.tolerance_moins?.id ?? '', event.target.value, row)}
                           className="table-input"
+                          inputMode="decimal"
                         />
                       </td>
                       <td>
