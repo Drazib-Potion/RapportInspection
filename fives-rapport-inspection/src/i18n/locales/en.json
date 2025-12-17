@@ -39,9 +39,12 @@
     "conformePlans": "IN ACCORDANCE WITH PLANS",
     "enRetard": "LATE",
     "critique": "CRITICAL",
+    "conforme": "CONFORM",
+    "nonConforme": "NON-CONFORM",
     "modifyProduct": "Modify this product",
     "visualState": "Visual state:",
     "progress": "Progress:",
+    "conformity": "Conformity:",
     "controleIntermediaire": "Intermediate control",
     "controleFinal": "Final control"
   },
@@ -100,6 +103,7 @@
     "questions": {
       "visualState": "VISUAL STATE",
       "fabricationProgress": "FABRICATION PROGRESS",
+      "conformity": "CONFORMITY",
       "comment": "Comment",
       "commentHelper": "Notes, anomalies or remarks",
       "value": "{{id}} - Value",
@@ -116,7 +120,9 @@
       "bad": "BAD",
       "conformePlans": "IN ACCORDANCE WITH PLANS",
       "late": "LATE",
-      "critical": "CRITICAL"
+      "critical": "CRITICAL",
+      "conforme": "CONFORM",
+      "nonConforme": "NON-CONFORM"
     },
     "helpers": {
       "integerExpected": "Integer expected",

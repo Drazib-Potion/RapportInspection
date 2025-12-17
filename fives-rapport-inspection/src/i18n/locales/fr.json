@@ -39,9 +39,12 @@
     "conformePlans": "CONFORME AUX PLANS",
     "enRetard": "EN RETARD",
     "critique": "CRITIQUE",
+    "conforme": "CONFORME",
+    "nonConforme": "NON CONFORME",
     "modifyProduct": "Modifier ce produit",
     "visualState": "État visuel :",
     "progress": "Avancement :",
+    "conformity": "Conformité :",
     "controleIntermediaire": "Contrôle intermédiaire",
     "controleFinal": "Contrôle final"
   },
@@ -100,6 +103,7 @@
     "questions": {
       "visualState": "ETAT VISUEL",
       "fabricationProgress": "AVANCEMENT DE LA FABRICATION",
+      "conformity": "CONFORMITÉ",
       "comment": "Commentaire",
       "commentHelper": "Notes, anomalies ou remarques",
       "value": "{{id}} - Valeur",
@@ -116,7 +120,9 @@
       "bad": "MAUVAIS",
       "conformePlans": "CONFORME AUX PLANS",
       "late": "EN RETARD",
-      "critical": "CRITIQUE"
+      "critical": "CRITIQUE",
+      "conforme": "CONFORME",
+      "nonConforme": "NON CONFORME"
     },
     "helpers": {
       "integerExpected": "Entier attendu",

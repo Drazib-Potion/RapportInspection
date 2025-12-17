@@ -201,6 +201,21 @@ export const getProductCatalog = (): ProductDefinition[] => {
           ]
         },
         {
+          id: 'conformite',
+          label: (i18nInstance.t as any)('products.questions.conformity'),
+          type: 'choice',
+          options: [
+            {
+              value: 'conforme',
+              label: (i18nInstance.t as any)('products.options.conforme'),
+            },
+            {
+              value: 'non_conforme',
+              label: (i18nInstance.t as any)('products.options.nonConforme'),
+            }
+          ]
+        },
+        {
           id: 'commentaire',
           label: (i18nInstance.t as any)('products.questions.comment'),
           helper: (i18nInstance.t as any)('products.questions.commentHelper'),
@@ -250,6 +265,21 @@ export const getProductCatalog = (): ProductDefinition[] => {
             {
               value: 'critique',
               label: (i18nInstance.t as any)('products.options.critical'),
+            }
+          ]
+        },
+        {
+          id: 'conformite',
+          label: (i18nInstance.t as any)('products.questions.conformity'),
+          type: 'choice',
+          options: [
+            {
+              value: 'conforme',
+              label: (i18nInstance.t as any)('products.options.conforme'),
+            },
+            {
+              value: 'non_conforme',
+              label: (i18nInstance.t as any)('products.options.nonConforme'),
             }
           ]
         },

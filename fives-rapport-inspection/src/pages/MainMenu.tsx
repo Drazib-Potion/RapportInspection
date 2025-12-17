@@ -19,25 +19,25 @@ const getChoiceLabel = (entry: CompletedEntry, questionId: string, t: (key: stri
     'conforme_plans': 'products.options.conformePlans',
     'en_retard': 'products.options.late',
     'critique': 'products.options.critical',
+    'conforme': 'products.options.conforme',
+    'non_conforme': 'products.options.nonConforme',
   };
   
   const translationKey = valueToTranslationKey[answerValue];
   return translationKey ? t(translationKey) : answerValue;
 };
 
-// Helper pour obtenir la couleur de bordure selon l'avancement
-const getAvancementColor = (entry: CompletedEntry): { border: string; dot: string } | null => {
-  const avancementValue = entry.answers['avancement_fabrication'];
-  if (!avancementValue) {
+// Helper pour obtenir la couleur de bordure selon la conformité
+const getConformiteColor = (entry: CompletedEntry): { border: string; dot: string } | null => {
+  const conformiteValue = entry.answers['conformite'];
+  if (!conformiteValue) {
     return null;
   }
   
-  switch (avancementValue) {
-    case 'conforme_plans':
+  switch (conformiteValue) {
+    case 'conforme':
       return { border: '#4CAF50', dot: '#4CAF50' }; // Vert
-    case 'en_retard':
-      return { border: '#FFC107', dot: '#FFC107' }; // Jaune
-    case 'critique':
+    case 'non_conforme':
       return { border: '#F44336', dot: '#F44336' }; // Rouge
     default:
       return null;
@@ -302,17 +302,7 @@ const MainMenu: React.FC = () => {
                   backgroundColor: '#4CAF50',
                   border: '2px solid #4CAF50'
                 }} />
-                <span><strong>{t('mainMenu.conformePlans')}</strong></span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ 
-                  width: '12px', 
-                  height: '12px', 
-                  borderRadius: '50%', 
-                  backgroundColor: '#FFC107',
-                  border: '2px solid #FFC107'
-                }} />
-                <span><strong>{t('mainMenu.enRetard')}</strong></span>
+                <span><strong>{t('mainMenu.conforme')}</strong></span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{ 
@@ -322,22 +312,22 @@ const MainMenu: React.FC = () => {
                   backgroundColor: '#F44336',
                   border: '2px solid #F44336'
                 }} />
-                <span><strong>{t('mainMenu.critique')}</strong></span>
+                <span><strong>{t('mainMenu.nonConforme')}</strong></span>
               </div>
             </div>
             <div className="product-grid products-list" style={{ marginTop: '1rem' }}>
               {completedEntries.map((entry, index) => {
-                const avancementColor = getAvancementColor(entry);
+                const conformiteColor = getConformiteColor(entry);
                 return (
                   <article 
                     key={`${entry.product.id}-${index}`} 
                     className="product-card"
                     style={{
-                      border: avancementColor ? `2px solid ${avancementColor.border}` : undefined,
+                      border: conformiteColor ? `2px solid ${conformiteColor.border}` : undefined,
                       position: 'relative'
                     }}
                   >
-                    {avancementColor && (
+                    {conformiteColor && (
                       <div 
                         className="status-dot"
                         style={{
@@ -347,7 +337,7 @@ const MainMenu: React.FC = () => {
                           width: '12px',
                           height: '12px',
                           borderRadius: '50%',
-                          backgroundColor: avancementColor.dot
+                          backgroundColor: conformiteColor.dot
                         }}
                       />
                     )}
@@ -368,6 +358,11 @@ const MainMenu: React.FC = () => {
                       {getChoiceLabel(entry, 'avancement_fabrication', t) && (
                         <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>
                           <strong>{t('mainMenu.progress')}</strong> {getChoiceLabel(entry, 'avancement_fabrication', t)}
+                        </p>
+                      )}
+                      {getChoiceLabel(entry, 'conformite', t) && (
+                        <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>
+                          <strong>{t('mainMenu.conformity')}</strong> {getChoiceLabel(entry, 'conformite', t)}
                         </p>
                       )}
                     </div>
