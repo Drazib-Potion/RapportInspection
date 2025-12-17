@@ -44,6 +44,25 @@ const getConformiteColor = (entry: CompletedEntry): { border: string; dot: strin
   }
 };
 
+// Helper pour calculer l'état global de conformité de l'affaire
+const getAffaireConformite = (entries: CompletedEntry[]): 'conforme' | 'non_conforme' | null => {
+  // Filtrer les produits pour exclure "Appareil de mesure"
+  const appareilMesureId = 'appareil-de-mesure'; // ID généré par generateProductId('Appareil de mesure')
+  const relevantEntries = entries.filter(entry => entry.product.id !== appareilMesureId);
+  
+  if (relevantEntries.length === 0) {
+    return null; // Aucun produit pertinent
+  }
+  
+  // Vérifier que tous les produits pertinents sont conformes
+  const allConformes = relevantEntries.every(entry => {
+    const conformiteValue = entry.answers['conformite'];
+    return conformiteValue === 'conforme';
+  });
+  
+  return allConformes ? 'conforme' : 'non_conforme';
+};
+
 const MainMenu: React.FC = () => {
   const {
     affaireName,
@@ -82,6 +101,8 @@ const MainMenu: React.FC = () => {
   const startButtonLabel = completedEntries.length > 0 
     ? t('mainMenu.addAnotherProduct') 
     : t('mainMenu.startInspection');
+  
+  const affaireConformite = getAffaireConformite(completedEntries);
 
   const handleChooseDraftsFolder = async () => {
     try {
@@ -200,14 +221,43 @@ const MainMenu: React.FC = () => {
       </section>
       <br />
       <br />
-      {draftsDirectory && <section className="affaire-card">
-        <div>
-          <h2>{t('mainMenu.identifyAffaire')}</h2>
-          <p className="muted">{t('mainMenu.affaireDescription')}</p>
+        {draftsDirectory && <section className="affaire-card">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+          {affaireConformite && (
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.5rem',
+              backgroundColor: affaireConformite === 'conforme' ? '#E8F5E9' : '#FFEBEE',
+              border: `2px solid ${affaireConformite === 'conforme' ? '#4CAF50' : '#F44336'}`,
+              fontSize: '0.9rem',
+              fontWeight: 'bold',
+              color: affaireConformite === 'conforme' ? '#2E7D32' : '#C62828'
+            }}>
+              <div style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                backgroundColor: affaireConformite === 'conforme' ? '#4CAF50' : '#F44336'
+              }} />
+              <span>
+                {affaireConformite === 'conforme' 
+                  ? t('mainMenu.affaireConforme') 
+                  : t('mainMenu.affaireNonConforme')}
+              </span>
+            </div>
+          )}
           {completedEntries.length > 0 && (
-            <button className="ghost-btn" onClick={handleRestart}>
-              {t('mainMenu.newAffaire')}
-            </button>
+            <>
+              <button className="ghost-btn" onClick={handleRestart}>
+                {t('mainMenu.newAffaire')}
+              </button>
+              <button className="ghost-btn" onClick={handleSaveDraftClick}>
+                {t('mainMenu.saveDraft')}
+              </button>
+            </>
           )}
         </div>
         {!draftsDirectory && (
@@ -276,11 +326,6 @@ const MainMenu: React.FC = () => {
             <p className="warning-text" style={{ fontSize: '0.9rem', color: '#856404', textAlign: 'center' }}>
               {t('mainMenu.selectControleFirst')}
             </p>
-          )}
-          {completedEntries.length > 0 && (
-            <button className="ghost-btn" onClick={handleSaveDraftClick}>
-              {t('mainMenu.saveDraft')}
-            </button>
           )}
           <button className="ghost-btn" onClick={handleStartInspection} disabled={!canStart}>
             {startButtonLabel}

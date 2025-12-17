@@ -45,6 +45,8 @@
     "visualState": "Visual state:",
     "progress": "Progress:",
     "conformity": "Conformity:",
+    "affaireConforme": "PROJECT CONFORM",
+    "affaireNonConforme": "PROJECT NON-CONFORM",
     "controleIntermediaire": "Intermediate control",
     "controleFinal": "Final control",
     "selectControleFirst": "⚠️ Please select a control type (intermediate or final) before exporting the PDF."
