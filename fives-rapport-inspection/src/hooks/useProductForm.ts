@@ -42,7 +42,7 @@ export const useProductForm = () => {
     }
 
     const entry: CompletedEntry = {
-      product: selectedProduct,
+      productId: selectedProduct.id,
       answers: currentAnswers
     };
 
@@ -57,7 +57,7 @@ export const useProductForm = () => {
 
   const editEntry = useCallback((index: number) => {
     const entry = completedEntries[index];
-    setSelectedProductId(entry.product.id);
+    setSelectedProductId(entry.productId);
     setCurrentAnswers({ ...entry.answers });
     setActiveEntryIndex(index);
   }, [completedEntries]);

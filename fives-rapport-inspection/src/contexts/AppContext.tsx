@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDrafts } from '../hooks/useDrafts';
 import { useProductForm } from '../hooks/useProductForm';
+import { useProductCatalog } from '../hooks/useProductCatalog';
 import { generateProductId } from '../utils/productData';
 import type { CompletedEntry, DraftPayload, ProductDefinition, DraftSummary, DraftData } from '../utils/types';
 
@@ -69,6 +70,8 @@ interface AppContextType {
   
   // Helpers
   summaryForEntry: (entry: CompletedEntry) => string;
+  productCatalog: ProductDefinition[];
+  getProductById: (productId: string) => ProductDefinition | undefined;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -93,6 +96,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const drafts = useDrafts();
   const productForm = useProductForm();
+  const productCatalog = useProductCatalog();
+
+  const getProductById = useCallback((productId: string): ProductDefinition | undefined => {
+    return productCatalog.find(p => p.id === productId);
+  }, [productCatalog]);
 
   const trimmedAffaire = affaireName.trim();
 
@@ -239,9 +247,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, [drafts, t]);
 
   const summaryForEntry = useCallback((entry: CompletedEntry) => {
+    const product = getProductById(entry.productId);
+    if (!product) {
+      return t('confirmations.noResponse');
+    }
+    
     const allQuestions = [
-      ...(entry.product.tableQuestions ?? []),
-      ...(entry.product.normalQuestions ?? [])
+      ...(product.tableQuestions ?? []),
+      ...(product.normalQuestions ?? [])
     ];
     const responses = allQuestions
       .map((question) => {
@@ -254,7 +267,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       .filter(Boolean);
 
     return responses.length > 0 ? responses.join(' · ') : t('confirmations.noResponse');
-  }, [t]);
+  }, [t, getProductById]);
 
   const contextValue: AppContextType = {
     affaireName,
@@ -308,6 +321,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     confirmDraftNameSave,
     confirmOverwriteSave,
     summaryForEntry,
+    productCatalog,
+    getProductById,
   };
 
   return (

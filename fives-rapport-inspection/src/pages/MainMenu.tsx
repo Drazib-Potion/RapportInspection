@@ -46,10 +46,10 @@ const getConformiteColor = (entry: CompletedEntry): { border: string; dot: strin
 };
 
 // Helper pour calculer l'état global de conformité de l'affaire
-const getAffaireConformite = (entries: CompletedEntry[]): 'conforme' | 'non_conforme' | null => {
+const getAffaireConformite = (entries: CompletedEntry[], productCatalog: Array<{ id: string }>): 'conforme' | 'non_conforme' | null => {
   // Filtrer les produits pour exclure "Appareil de mesure"
   const appareilMesureId = 'appareil-de-mesure'; // ID généré par generateProductId('Appareil de mesure')
-  const relevantEntries = entries.filter(entry => entry.product.id !== appareilMesureId);
+  const relevantEntries = entries.filter(entry => entry.productId !== appareilMesureId);
   
   if (relevantEntries.length === 0) {
     return null; // Aucun produit pertinent
@@ -73,6 +73,7 @@ const MainMenu: React.FC = () => {
     controleFinal,
     setControleFinal,
     completedEntries,
+    productCatalog,
     draftsDirectory,
     drafts,
     draftsLoading,
@@ -104,7 +105,7 @@ const MainMenu: React.FC = () => {
     ? t('mainMenu.addAnotherProduct') 
     : t('mainMenu.startInspection');
   
-  const affaireConformite = getAffaireConformite(completedEntries);
+  const affaireConformite = getAffaireConformite(completedEntries, productCatalog);
 
   const handleChooseDraftsFolder = async () => {
     try {
@@ -120,7 +121,7 @@ const MainMenu: React.FC = () => {
 
   const handleEditEntry = (index: number) => {
     editEntry(index);
-    navigate(`/form/${completedEntries[index].product.id}`);
+    navigate(`/form/${completedEntries[index].productId}`);
   };
 
   const handleExportPDF = async () => {
@@ -134,11 +135,23 @@ const MainMenu: React.FC = () => {
     }
 
     try {
+      // Reconstruire les entries avec le ProductDefinition complet pour l'export
+      const entriesWithProducts = completedEntries.map(entry => {
+        const product = productCatalog.find(p => p.id === entry.productId);
+        if (!product) {
+          throw new Error(`Product not found: ${entry.productId}`);
+        }
+        return {
+          product,
+          answers: entry.answers
+        };
+      });
+
       await window.electron.exportPDF({
         affaireName,
         controleIntermediaire,
         controleFinal,
-        entries: completedEntries
+        entries: entriesWithProducts
       });
     } catch (error) {
       console.error('Erreur lors de l\'export PDF', error);
@@ -370,10 +383,13 @@ const MainMenu: React.FC = () => {
             </div>
             <div className="product-grid products-list" style={{ marginTop: '1rem' }}>
               {completedEntries.map((entry, index) => {
+                const product = productCatalog.find(p => p.id === entry.productId);
+                if (!product) return null;
+                
                 const conformiteColor = getConformiteColor(entry);
                 return (
                   <article 
-                    key={`${entry.product.id}-${index}`} 
+                    key={`${entry.productId}-${index}`} 
                     className="product-card"
                     style={{
                       border: conformiteColor ? `2px solid ${conformiteColor.border}` : undefined,
@@ -396,9 +412,9 @@ const MainMenu: React.FC = () => {
                     )}
                     <div className="product-header">
                       <div>
-                        <h3>{entry.product.name}</h3>
-                        {entry.product.reference && (
-                          <p className="product-reference">{entry.product.reference}</p>
+                        <h3>{product.name}</h3>
+                        {product.reference && (
+                          <p className="product-reference">{product.reference}</p>
                         )}
                       </div>
                     </div>

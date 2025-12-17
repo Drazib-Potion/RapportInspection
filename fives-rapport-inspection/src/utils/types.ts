@@ -37,7 +37,7 @@ export type ProductDefinition = {
 };
 
 export type CompletedEntry = {
-  product: ProductDefinition;
+  productId: string;
   answers: Record<string, string>;
 };
 
@@ -72,7 +72,10 @@ export type ElectronBridge = {
     affaireName: string;
     controleIntermediaire?: boolean;
     controleFinal?: boolean;
-    entries: CompletedEntry[];
+    entries: Array<{
+      product: ProductDefinition;
+      answers: Record<string, string>;
+    }>;
   }) => Promise<string | null>;
 };
 
