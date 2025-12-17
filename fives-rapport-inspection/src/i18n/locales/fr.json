@@ -46,7 +46,8 @@
     "progress": "Avancement :",
     "conformity": "Conformité :",
     "controleIntermediaire": "Contrôle intermédiaire",
-    "controleFinal": "Contrôle final"
+    "controleFinal": "Contrôle final",
+    "selectControleFirst": "⚠️ Veuillez sélectionner un type de contrôle (intermédiaire ou final) avant d'exporter le PDF."
   },
   "productSelection": {
     "backToMenu": "Retour au menu",

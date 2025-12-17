@@ -77,7 +77,8 @@ const MainMenu: React.FC = () => {
 
   const trimmedAffaire = affaireName.trim();
   const canStart = Boolean(trimmedAffaire && draftsDirectory);
-  const canExport = Boolean(trimmedAffaire && draftsDirectory && completedEntries.length > 0);
+  const hasControleSelected = controleIntermediaire || controleFinal;
+  const canExport = Boolean(trimmedAffaire && draftsDirectory && completedEntries.length > 0 && hasControleSelected);
   const startButtonLabel = completedEntries.length > 0 
     ? t('mainMenu.addAnotherProduct') 
     : t('mainMenu.startInspection');
@@ -269,6 +270,11 @@ const MainMenu: React.FC = () => {
           {!draftsDirectory && (
             <p className="warning-text" style={{ fontSize: '0.9rem', color: '#856404', textAlign: 'center' }}>
               {t('mainMenu.selectFolderFirst')}
+            </p>
+          )}
+          {draftsDirectory && completedEntries.length > 0 && !hasControleSelected && (
+            <p className="warning-text" style={{ fontSize: '0.9rem', color: '#856404', textAlign: 'center' }}>
+              {t('mainMenu.selectControleFirst')}
             </p>
           )}
           {completedEntries.length > 0 && (
