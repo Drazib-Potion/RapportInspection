@@ -50,7 +50,8 @@
     "affaireNonConforme": "AFFAIRE NON CONFORME",
     "controleIntermediaire": "Contrôle intermédiaire",
     "controleFinal": "Contrôle final",
-    "selectControleFirst": "⚠️ Veuillez sélectionner un type de contrôle (intermédiaire ou final) avant d'exporter le PDF."
+    "selectControleFirst": "⚠️ Veuillez sélectionner un type de contrôle (intermédiaire ou final) avant d'exporter le PDF.",
+    "appareilMesureRequired": "⚠️ L'export PDF nécessite la présence d'un produit « Appareil de mesure » dans la liste des produits."
   },
   "productSelection": {
     "backToMenu": "Retour au menu",

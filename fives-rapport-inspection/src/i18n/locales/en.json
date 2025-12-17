@@ -50,7 +50,8 @@
     "affaireNonConforme": "PROJECT NON-CONFORM",
     "controleIntermediaire": "Intermediate control",
     "controleFinal": "Final control",
-    "selectControleFirst": "⚠️ Please select a control type (intermediate or final) before exporting the PDF."
+    "selectControleFirst": "⚠️ Please select a control type (intermediate or final) before exporting the PDF.",
+    "appareilMesureRequired": "⚠️ PDF export requires a « Measuring device » product to be present in the product list."
   },
   "productSelection": {
     "backToMenu": "Back to menu",

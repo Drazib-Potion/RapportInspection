@@ -45,6 +45,12 @@ const getConformiteColor = (entry: CompletedEntry): { border: string; dot: strin
   }
 };
 
+// Helper pour vérifier si "Appareil de mesure" est présent dans les entrées
+const hasAppareilMesure = (entries: CompletedEntry[]): boolean => {
+  const appareilMesureId = 'appareil-de-mesure'; // ID généré par generateProductId('Appareil de mesure')
+  return entries.some(entry => entry.productId === appareilMesureId);
+};
+
 // Helper pour calculer l'état global de conformité de l'affaire
 const getAffaireConformite = (entries: CompletedEntry[], productCatalog: Array<{ id: string }>): 'conforme' | 'non_conforme' | null => {
   // Filtrer les produits pour exclure "Appareil de mesure"
@@ -100,7 +106,8 @@ const MainMenu: React.FC = () => {
   const trimmedAffaire = affaireName.trim();
   const canStart = Boolean(trimmedAffaire && draftsDirectory);
   const hasControleSelected = controleIntermediaire || controleFinal;
-  const canExport = Boolean(trimmedAffaire && draftsDirectory && completedEntries.length > 0 && hasControleSelected);
+  const hasAppareilMesureInEntries = hasAppareilMesure(completedEntries);
+  const canExport = Boolean(trimmedAffaire && draftsDirectory && completedEntries.length > 0 && hasControleSelected && hasAppareilMesureInEntries);
   const startButtonLabel = completedEntries.length > 0 
     ? t('mainMenu.addAnotherProduct') 
     : t('mainMenu.startInspection');
@@ -341,6 +348,11 @@ const MainMenu: React.FC = () => {
           {draftsDirectory && completedEntries.length > 0 && !hasControleSelected && (
             <p className="warning-text" style={{ fontSize: '0.9rem', color: '#856404', textAlign: 'center' }}>
               {t('mainMenu.selectControleFirst')}
+            </p>
+          )}
+          {draftsDirectory && completedEntries.length > 0 && hasControleSelected && !hasAppareilMesureInEntries && (
+            <p className="warning-text" style={{ fontSize: '0.9rem', color: '#856404', textAlign: 'center' }}>
+              {t('mainMenu.appareilMesureRequired')}
             </p>
           )}
           <button className="ghost-btn" onClick={handleStartInspection} disabled={!canStart}>
