@@ -87,6 +87,16 @@
       "name": "Carbon Tip",
       "description": "Carbon tip inspection"
     },
+    "appareilMesure": {
+      "name": "Measuring device",
+      "description": "Measuring device inspection",
+      "questions": {
+        "produit": "Product",
+        "type": "Type",
+        "ref": "Ref",
+        "date": "Date"
+      }
+    },
     "questions": {
       "visualState": "VISUAL STATE",
       "fabricationProgress": "FABRICATION PROGRESS",

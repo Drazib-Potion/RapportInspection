@@ -262,6 +262,37 @@ export const getProductCatalog = (): ProductDefinition[] => {
       ],
       imagePath: '/productImg/embout-charbon.svg'
     },
+    {
+      id: generateProductId('Appareil de mesure'),
+      name: (i18nInstance.t as any)('products.appareilMesure.name'),
+      description: (i18nInstance.t as any)('products.appareilMesure.description'),
+      normalQuestions: [
+        {
+          id: 'appareil_produit',
+          label: (i18nInstance.t as any)('products.appareilMesure.questions.produit'),
+          // helper: (i18nInstance.t as any)('products.helpers.freeText'),
+          type: 'textarea'
+        },
+        {
+          id: 'appareil_type',
+          label: (i18nInstance.t as any)('products.appareilMesure.questions.type'),
+          // helper: (i18nInstance.t as any)('products.helpers.freeText'),
+          type: 'textarea'
+        },
+        {
+          id: 'appareil_ref',
+          label: (i18nInstance.t as any)('products.appareilMesure.questions.ref'),
+          // helper: (i18nInstance.t as any)('products.helpers.freeText'),
+          type: 'textarea'
+        },
+        {
+          id: 'appareil_date',
+          label: (i18nInstance.t as any)('products.appareilMesure.questions.date'),
+          // helper: (i18nInstance.t as any)('products.helpers.freeText'),
+          type: 'textarea'
+        }
+      ]
+    },
   ];
 };
 

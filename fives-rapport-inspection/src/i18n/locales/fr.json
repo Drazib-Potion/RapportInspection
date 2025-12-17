@@ -87,6 +87,16 @@
       "name": "Embout Charbon",
       "description": "Inspection de l'embout charbon"
     },
+    "appareilMesure": {
+      "name": "Appareil de mesure",
+      "description": "Inspection de l'appareil de mesure",
+      "questions": {
+        "produit": "Produit",
+        "type": "Type",
+        "ref": "Réf",
+        "date": "Date"
+      }
+    },
     "questions": {
       "visualState": "ETAT VISUEL",
       "fabricationProgress": "AVANCEMENT DE LA FABRICATION",
