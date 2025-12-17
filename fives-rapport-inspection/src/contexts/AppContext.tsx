@@ -69,6 +69,9 @@ interface AppContextType {
   setOverwritePrompt: (prompt: { entries: CompletedEntry[]; draftName: string } | null) => void;
   confirmDraftNameSave: (draftName?: string) => Promise<void>;
   confirmOverwriteSave: () => Promise<void>;
+  deleteEntryPrompt: number | null;
+  setDeleteEntryPrompt: (index: number | null) => void;
+  confirmDeleteEntry: () => void;
   
   // Helpers
   summaryForEntry: (entry: CompletedEntry) => string;
@@ -95,6 +98,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [draftNamePrompt, setDraftNamePrompt] = useState<{ entries: CompletedEntry[]; defaultName: string } | null>(null);
   const [draftNameInput, setDraftNameInput] = useState('');
   const [overwritePrompt, setOverwritePrompt] = useState<{ entries: CompletedEntry[]; draftName: string } | null>(null);
+  const [deleteEntryPrompt, setDeleteEntryPrompt] = useState<number | null>(null);
 
   const drafts = useDrafts();
   const productForm = useProductForm();
@@ -137,10 +141,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, [productForm, navigate]);
 
   const handleDeleteEntry = useCallback((index: number) => {
-    productForm.deleteEntry(index);
+    setDeleteEntryPrompt(index);
+  }, []);
+
+  const confirmDeleteEntry = useCallback(() => {
+    if (deleteEntryPrompt === null) {
+      return;
+    }
+    productForm.deleteEntry(deleteEntryPrompt);
     productForm.resetFormState();
+    setDeleteEntryPrompt(null);
     navigate('/');
-  }, [productForm, navigate]);
+  }, [deleteEntryPrompt, productForm, navigate]);
 
   const handleSaveDraftClick = useCallback(() => {
     const entriesToPersist = productForm.buildEntriesWithCurrent();
@@ -324,6 +336,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setOverwritePrompt,
     confirmDraftNameSave,
     confirmOverwriteSave,
+    deleteEntryPrompt,
+    setDeleteEntryPrompt,
+    confirmDeleteEntry,
     summaryForEntry,
     productCatalog,
     getProductById,

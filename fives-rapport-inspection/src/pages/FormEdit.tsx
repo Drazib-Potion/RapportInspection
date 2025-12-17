@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { ConfirmModal } from '../components/ConfirmModal';
 import type { ProductQuestion, TableRow } from '../utils/types';
 
 // Champs attendus pour le format tableau
@@ -78,6 +79,11 @@ const FormEdit: React.FC = () => {
     activeEntryIndex,
     handleDeleteEntry,
     handleReturnToMenu,
+    deleteEntryPrompt,
+    setDeleteEntryPrompt,
+    confirmDeleteEntry,
+    completedEntries,
+    getProductById,
   } = useAppContext();
   const { t } = useLanguage();
 
@@ -85,7 +91,13 @@ const FormEdit: React.FC = () => {
     return null;
   }
 
+  // Récupérer les informations du produit à supprimer pour la modale
+  const entryToDelete = deleteEntryPrompt !== null ? completedEntries[deleteEntryPrompt] : null;
+  const productToDelete = entryToDelete ? getProductById(entryToDelete.productId) : null;
+  const productNameToDelete = entryToDelete && productToDelete ? (entryToDelete.customName || productToDelete.name) : '';
+
   return (
+    <>
       <section className="product-card">
         <div className="product-header">
           <div>
@@ -304,6 +316,16 @@ const FormEdit: React.FC = () => {
           </button>
         </div>
       </section>
+      <ConfirmModal
+        isOpen={deleteEntryPrompt !== null}
+        title={t('modals.deleteProduct.title')}
+        description={t('modals.deleteProduct.description', { name: productNameToDelete })}
+        onConfirm={confirmDeleteEntry}
+        onCancel={() => setDeleteEntryPrompt(null)}
+        confirmLabel={t('common.delete')}
+        confirmButtonClass="danger-btn"
+      />
+    </>
   );
 };
 

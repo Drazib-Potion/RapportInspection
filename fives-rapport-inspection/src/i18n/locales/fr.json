@@ -91,6 +91,10 @@
       "title": "Créer une nouvelle affaire ?",
       "description": "Toutes les données non sauvegardées ou non exportées seront perdues. Êtes-vous sûr de vouloir continuer ?",
       "confirm": "Confirmer"
+    },
+    "deleteProduct": {
+      "title": "Supprimer ce produit ?",
+      "description": "Êtes-vous sûr de vouloir supprimer « {{name}} » ? Cette action est irréversible."
     }
   },
   "products": {

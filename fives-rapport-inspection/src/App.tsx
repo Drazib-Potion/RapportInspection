@@ -2,16 +2,16 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { AppProvider, useAppContext } from './contexts/AppContext';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { LanguageSelector } from './components/LanguageSelector';
 import { AppTitle } from './components/AppTitle';
 import MainMenu from './pages/MainMenu';
 import ProductSelection from './pages/ProductSelection';
 import FormEdit from './pages/FormEdit';
-import { DraftNameModal } from './components/DraftNameModal';
-import { OverwriteModal } from './components/OverwriteModal';
+import { ConfirmModal } from './components/ConfirmModal';
 
 function AppRoutes() {
+  const { t } = useLanguage();
   const {
     draftNamePrompt,
     setDraftNamePrompt,
@@ -22,7 +22,8 @@ function AppRoutes() {
     confirmOverwriteSave,
   } = useAppContext();
 
-  const handleDraftNameConfirm = async (name: string) => {
+  const handleDraftNameConfirm = async (name?: string) => {
+    if (!name) return;
     setDraftNameInput(name);
     await confirmDraftNameSave(name);
   };
@@ -34,20 +35,28 @@ function AppRoutes() {
         <Route path="/form" element={<ProductSelection />} />
         <Route path="/form/:productId" element={<FormEdit />} />
       </Routes>
-      <DraftNameModal
+      <ConfirmModal
         isOpen={draftNamePrompt !== null}
-        defaultName={draftNamePrompt?.defaultName || ''}
+        title={t('modals.draftName.title')}
+        description={t('modals.draftName.description')}
         onConfirm={handleDraftNameConfirm}
         onCancel={() => {
           setDraftNamePrompt(null);
           setDraftNameInput('');
         }}
+        confirmLabel={t('common.save')}
+        inputField={{
+          defaultValue: draftNamePrompt?.defaultName || '',
+          placeholder: t('modals.draftName.placeholder'),
+        }}
       />
-      <OverwriteModal
+      <ConfirmModal
         isOpen={overwritePrompt !== null}
-        draftName={overwritePrompt?.draftName || ''}
+        title={t('modals.overwrite.title')}
+        description={t('modals.overwrite.description', { name: overwritePrompt?.draftName || '' })}
         onConfirm={confirmOverwriteSave}
         onCancel={() => setOverwritePrompt(null)}
+        confirmLabel={t('modals.overwrite.replace')}
       />
     </>
   );

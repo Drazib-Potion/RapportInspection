@@ -91,6 +91,10 @@
       "title": "Create a new project?",
       "description": "All unsaved or unexported data will be lost. Are you sure you want to continue?",
       "confirm": "Confirm"
+    },
+    "deleteProduct": {
+      "title": "Delete this product?",
+      "description": "Are you sure you want to delete « {{name}} »? This action cannot be undone."
     }
   },
   "products": {
