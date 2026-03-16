@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { AppProvider, useAppContext } from './contexts/AppContext';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
@@ -64,14 +64,14 @@ function AppRoutes() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <LanguageProvider>
         <AppProvider>
           <div className="app-shell">
             <header className="app-header-top">
               <div className="header-logo">
                 <img 
-                  src="/fivesLoginimg.png" 
+                  src="fivesLoginimg.png" 
                   alt="Fives Pillard" 
                   className="logo-image"
                 />
@@ -84,7 +84,7 @@ function App() {
           </div>
         </AppProvider>
       </LanguageProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

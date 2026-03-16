@@ -11,7 +11,7 @@ export const LanguageSelector: React.FC = () => {
         onClick={() => setLanguage('fr')}
         title="Français"
       >
-        <span className="flag">🇫🇷</span>
+        {/* <span className="flag">🇫🇷</span> */}
         <span>FR</span>
       </button>
       <button
@@ -19,7 +19,7 @@ export const LanguageSelector: React.FC = () => {
         onClick={() => setLanguage('en')}
         title="English"
       >
-        <span className="flag">🇬🇧</span>
+        {/* <span className="flag">🇬🇧</span> */}
         <span>EN</span>
       </button>
     </div>

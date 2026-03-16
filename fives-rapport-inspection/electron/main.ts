@@ -1,6 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import path from 'path';
 import { promises as fs } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { createWriteStream } from 'node:fs';
 import PDFDocument from 'pdfkit';
 
@@ -19,10 +20,12 @@ function getStartURL() {
 function getIconPath() {
   // En développement, le fichier est dans public/
   if (process.env.ELECTRON_START_URL) {
-    return path.join(__dirname, '..', '..', 'public', 'favicon.png');
+    const devIcon = path.join(__dirname, '..', '..', 'public', 'favicon.png');
+    return existsSync(devIcon) ? devIcon : undefined;
   }
   // En production, le fichier est copié dans build/
-  return path.join(__dirname, '..', '..', 'build', 'favicon.png');
+  const prodIcon = path.join(__dirname, '..', '..', 'build', 'favicon.png');
+  return existsSync(prodIcon) ? prodIcon : undefined;
 }
 
 function createMainWindow() {
@@ -33,7 +36,7 @@ function createMainWindow() {
     height: 768,
     minWidth: 1000,
     minHeight: 700,
-    icon: iconPath,
+    ...(iconPath ? { icon: iconPath } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -48,7 +51,9 @@ app.whenReady().then(() => {
   // Définir l'icône du dock sur macOS
   if (process.platform === 'darwin' && app.dock) {
     const iconPath = getIconPath();
-    app.dock.setIcon(iconPath);
+    if (iconPath) {
+      app.dock.setIcon(iconPath);
+    }
   }
   
   createMainWindow();

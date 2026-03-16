@@ -1,6 +1,8 @@
 import { ProductDefinition, ProductQuestion } from './types';
 import i18nInstance from '../i18n/config';
 
+const publicUrl = process.env.PUBLIC_URL || '';
+
 export const generateProductId = (name: string) =>
   name
     .toLowerCase()
@@ -222,7 +224,7 @@ export const getProductCatalog = (): ProductDefinition[] => {
           type: 'textarea'
         }
       ],
-      imagePath: '/productImg/stabilisateur.svg'
+      imagePath: `${publicUrl}/productImg/stabilisateur.svg`
     },
     {
       id: generateProductId('Embout Charbon'),
@@ -290,7 +292,7 @@ export const getProductCatalog = (): ProductDefinition[] => {
           type: 'textarea'
         }
       ],
-      imagePath: '/productImg/embout-charbon.svg'
+      imagePath: `${publicUrl}/productImg/embout-charbon.svg`
     },
     {
       id: generateProductId('Appareil de mesure'),
