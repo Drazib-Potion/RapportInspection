@@ -394,69 +394,63 @@ const MainMenu: React.FC = () => {
                 <span><strong>{t('mainMenu.nonConforme')}</strong></span>
               </div>
             </div>
-            <div className="product-grid products-list" style={{ marginTop: '1rem' }}>
+            <div className="completed-products-list" role="list">
               {completedEntries.map((entry, index) => {
                 const product = productCatalog.find(p => p.id === entry.productId);
                 if (!product) return null;
-                
+
                 const conformiteColor = getConformiteColor(entry);
+                const detailParts: string[] = [];
+                const visuel = getChoiceLabel(entry, 'etat_visuel', t);
+                if (visuel) detailParts.push(`${t('mainMenu.visualState')} ${visuel}`);
+                const avancement = getChoiceLabel(entry, 'avancement_fabrication', t);
+                if (avancement) detailParts.push(`${t('mainMenu.progress')} ${avancement}`);
+                const conf = getChoiceLabel(entry, 'conformite', t);
+                if (conf) detailParts.push(`${t('mainMenu.conformity')} ${conf}`);
+
+                const conformiteLabel =
+                  entry.answers['conformite'] === 'conforme'
+                    ? t('mainMenu.conforme')
+                    : entry.answers['conformite'] === 'non_conforme'
+                      ? t('mainMenu.nonConforme')
+                      : null;
+
                 return (
-                  <article 
-                    key={`${entry.productId}-${index}`} 
-                    className="product-card"
-                    style={{
-                      border: conformiteColor ? `2px solid ${conformiteColor.border}` : undefined,
-                      position: 'relative'
-                    }}
+                  <div
+                    key={`${entry.productId}-${index}`}
+                    className="completed-product-row"
+                    role="listitem"
                   >
-                    {conformiteColor && (
-                      <div 
-                        className="status-dot"
-                        style={{
-                          position: 'absolute',
-                          top: '0.75rem',
-                          right: '0.75rem',
-                          width: '12px',
-                          height: '12px',
-                          borderRadius: '50%',
-                          backgroundColor: conformiteColor.dot
-                        }}
-                      />
-                    )}
-                    <div className="product-header">
-                      <div>
-                        <h3>{product.name}</h3>
-                        {entry.customName && (
-                          <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem', fontStyle: 'italic' }}>
-                            {entry.customName}
-                          </p>
-                        )}
-                        {product.reference && (
-                          <p className="product-reference">{product.reference}</p>
+                    <div
+                      className="completed-product-row-dot"
+                      style={{
+                        backgroundColor: conformiteColor?.dot ?? '#BDBDBD'
+                      }}
+                      aria-hidden
+                    />
+                    <div className="completed-product-row-main">
+                      <div className="completed-product-row-title">
+                        <span>{product.name}</span>
+                        {conformiteLabel && (
+                          <span className="completed-product-row-badge" style={{ color: conformiteColor?.dot ?? '#757575' }}>
+                            {conformiteLabel}
+                          </span>
                         )}
                       </div>
-                    </div>
-                    <div className="product-choices" style={{ marginTop: '0.75rem', marginBottom: '0.75rem' }}>
-                      {getChoiceLabel(entry, 'etat_visuel', t) && (
-                        <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>
-                          <strong>{t('mainMenu.visualState')}</strong> {getChoiceLabel(entry, 'etat_visuel', t)}
-                        </p>
+                      {entry.customName && (
+                        <p className="completed-product-row-custom">{entry.customName}</p>
                       )}
-                      {getChoiceLabel(entry, 'avancement_fabrication', t) && (
-                        <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>
-                          <strong>{t('mainMenu.progress')}</strong> {getChoiceLabel(entry, 'avancement_fabrication', t)}
-                        </p>
+                      {product.reference && (
+                        <p className="product-reference completed-product-row-ref">{product.reference}</p>
                       )}
-                      {getChoiceLabel(entry, 'conformite', t) && (
-                        <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>
-                          <strong>{t('mainMenu.conformity')}</strong> {getChoiceLabel(entry, 'conformite', t)}
-                        </p>
+                      {detailParts.length > 0 && (
+                        <p className="completed-product-row-details">{detailParts.join(' · ')}</p>
                       )}
                     </div>
-                    <button className="ghost-btn" onClick={() => handleEditEntry(index)}>
+                    <button type="button" className="ghost-btn completed-product-row-action" onClick={() => handleEditEntry(index)}>
                       {t('mainMenu.modifyProduct')}
                     </button>
-                  </article>
+                  </div>
                 );
               })}
             </div>
